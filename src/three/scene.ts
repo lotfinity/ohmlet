@@ -2198,7 +2198,7 @@ export class BreadboardScene implements IBreadboardScene {
       for (let i = 0; i < entry.pins.length; i++) {
         const pin = entry.pins[i]
         // explicit bench position (movable instruments) overrides the shelf
-        const p = offboardTerminalPosition(slot, i, comp.pos)
+        const p = offboardTerminalPosition(slot, i, comp.pos, comp.type)
         pinPositions.push(new THREE.Vector3(p.x, 0, p.z))
         attach.push(new THREE.Vector3(p.x, TERMINAL_TOP_Y, p.z))
 
@@ -3062,7 +3062,7 @@ export class BreadboardScene implements IBreadboardScene {
 
     // selected off-board instrument → bench drag (0.5-grid, validity tint)
     if (rec.entry.placement === 'offboard') {
-      const origin = rec.comp.pos ?? offboardBodyPosition(rec.slot)
+      const origin = rec.comp.pos ?? offboardBodyPosition(rec.slot, undefined, rec.comp.type)
       this.instDrag = {
         id: picked,
         origin: { x: origin.x, z: origin.z },
@@ -3280,7 +3280,7 @@ export class BreadboardScene implements IBreadboardScene {
     if (!d || d.tint) return
     const rec = this.components.get(d.id)
     if (!rec) return
-    const rect = offboardBodyRect(rec.slot, rec.comp.pos)
+    const rect = offboardBodyRect(rec.slot, rec.comp.pos, rec.comp.type)
     const mat = new THREE.MeshBasicMaterial({
       color: DRAG_TINT_VALID,
       transparent: true,
@@ -3832,7 +3832,7 @@ export class BreadboardScene implements IBreadboardScene {
     let slot = 0
     for (const comp of this.layout.components) {
       if (getEntry(comp.type)?.placement !== 'offboard') continue
-      const r = offboardBodyRect(slot++, comp.pos)
+      const r = offboardBodyRect(slot++, comp.pos, comp.type)
       minX = Math.min(minX, r.minX - 0.8)
       maxX = Math.max(maxX, r.maxX + 0.8)
       minZ = Math.min(minZ, r.minZ - 0.5)

@@ -8,6 +8,7 @@
  */
 
 import type { StripRow } from './types'
+import { FIREBEETLE_PINS, FIREBEETLE_GPIOS, FIREBEETLE_INPUT_ONLY, FIREBEETLE_ALIASES } from './firebeetle'
 
 export type PlacementKind =
   | 'leads' // free 2/3-lead part: instance lists one HoleRef per pin in `holes`
@@ -92,6 +93,26 @@ export interface CatalogEntry {
 const E = (e: CatalogEntry) => e
 
 export const CATALOG: Record<string, CatalogEntry> = {
+  firebeetle_esp32e: E({
+    type: 'firebeetle_esp32e', label: 'FireBeetle 2 ESP32-E (DFR0654-F)', category: 'ic',
+    placement: 'offboard', pins: FIREBEETLE_PINS,
+    internalBridges: [['3V3','3V3_2'],['GND','GND_2'],['GPIO21','GPIO21_2'],['GPIO22','GPIO22_2'],['RST','EN']],
+    params: [
+      {key:'powered',label:'USB power',kind:'boolean',default:true,runtime:true},
+      {key:'reset',label:'Hold reset',kind:'boolean',default:false,runtime:true},
+      {key:'button',label:'User button (GPIO27 / D4)',kind:'boolean',default:false,runtime:true},
+      ...FIREBEETLE_GPIOS.flatMap((gpio): ParamDef[] => [
+        {key:`gpio${gpio}_mode`,label:`GPIO${gpio} · ${FIREBEETLE_ALIASES[gpio]}`,kind:'select',default:'input', options:FIREBEETLE_INPUT_ONLY.includes(gpio)?['input']:['input','low','high','pwm'],runtime:true},
+        ...(!FIREBEETLE_INPUT_ONLY.includes(gpio)?[
+          {key:`gpio${gpio}_frequency`,label:'PWM frequency',kind:'number' as const,default:1,min:0.1,max:1000,unit:'Hz',runtime:true},
+          {key:`gpio${gpio}_duty`,label:'PWM duty',kind:'number' as const,default:0.5,min:0,max:1,step:0.01,runtime:true},
+        ]:[])
+      ]),
+    ],
+    sim:{kind:'device',model:'firebeetle_esp32e'},visual:{shape:'firebeetle'},
+    doc:'DFRobot DFR0654-F, on the bench beside the breadboard. Wire ID:GPIO2, ID:GND, ID:3V3 etc. USB power supplies 3.3V logic and approximately 4.7V VCC. GPIO modes input (high impedance), low, high, PWM. GPIO34/35/36/39 are input only. Duplicate headers are internally bridged. GPIO2 drives the onboard LED. Manual behavioral model; does not execute firmware or emulate Wi-Fi/Bluetooth.',
+  }),
+
   // ----------------------------------------------------------- passives
   resistor: E({
     type: 'resistor',

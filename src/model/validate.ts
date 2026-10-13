@@ -443,7 +443,7 @@ export function validateLayout(input: unknown): ValidationResult {
         // sit clear of the active rig's board AND of every other instrument
         const slot = offboardSlot++
         if (posOk) {
-          const rect = offboardBodyRect(slot, pos)
+          const rect = offboardBodyRect(slot, pos, entry.type)
           const ext = boardExtents(config)
           if (rectsOverlap(rect, ext)) {
             errors.push(
@@ -702,7 +702,7 @@ export function validateLayout(input: unknown): ValidationResult {
   }
 
   // ---- warnings (static electrical checks) ----------------------------------
-  const supplies = [...byId.values()].filter((c) => c.entry.type === 'power_supply')
+  const supplies = [...byId.values()].filter((c) => c.entry.type === 'power_supply' || c.entry.type === 'firebeetle_esp32e')
   if (supplies.length === 0) {
     warnings.push(
       'no power_supply in the layout — add one and wire its "+" and "-" terminals to the power rails',

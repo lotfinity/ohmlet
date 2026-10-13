@@ -52,6 +52,7 @@ import type { ComponentInstance, ComponentTelemetry, Wire } from '../../model/ty
 import { clamp, fmtEng, fmtVolts, toNumber } from '../format'
 import { wireColorHex } from '../wire-colors'
 import './PropertiesSheet.css'
+import { FIREBEETLE_GPIOS, FIREBEETLE_ADC, FIREBEETLE_ALIASES } from '../../model/firebeetle'
 
 // ---------------------------------------------------------------------------
 // Sheet root
@@ -247,6 +248,7 @@ function ComponentEditor({
 }) {
   const telemetry = useStore((s) => s.telemetry)
   const entry = getEntry(comp.type)
+  const [gpio, setGpio] = useState(2)
 
   if (!entry) {
     return (
@@ -269,7 +271,7 @@ function ComponentEditor({
   const isPushbutton = comp.type === 'pushbutton'
   const isDip = comp.type === 'dip_switch_8'
   const generalParams = (entry.params ?? []).filter(
-    (p) => !(isPushbutton && p.key === 'pressed') && !(isDip && p.key === 'on'),
+    (p) => !(isPushbutton && p.key === 'pressed') && !(isDip && p.key === 'on') && !(comp.type === 'firebeetle_esp32e' && p.key.startsWith('gpio')),
   )
 
   return (
@@ -291,6 +293,15 @@ function ComponentEditor({
         </ListGroup>
       )}
 
+      {comp.type === 'firebeetle_esp32e' && (
+        <ListGroup header="GPIO controls" footer="Manual GPIO simulation. Firmware execution and wireless peripherals will be added separately. ADC: ideal 12-bit, 0–3.3V.">
+          <ListRow title="Pin" trailing={<select aria-label="FireBeetle GPIO" value={gpio} onChange={e=>setGpio(Number(e.target.value))}>{FIREBEETLE_GPIOS.map(g=><option key={g} value={g}>GPIO{g} · {FIREBEETLE_ALIASES[g]}</option>)}</select>}/>
+          {(entry.params??[]).filter(p=>p.key.startsWith(`gpio${gpio}_`) && (p.key.endsWith('_mode') || paramOf(comp.params,entry,`gpio${gpio}_mode`)==='pwm')).map(def=><ParamControl key={def.key} comp={comp} entry={entry} def={def}/>)}
+          <ListRow title="Digital input" trailing={<span>{(tele?.pinVoltages[`GPIO${gpio}`]??0)>1.65?'HIGH':'LOW'}</span>}/>
+          {FIREBEETLE_ADC.includes(gpio) && <ListRow title="ADC (12-bit)" trailing={<span>{Math.round(Math.max(0,Math.min(3.3,tele?.pinVoltages[`GPIO${gpio}`]??0))/3.3*4095)}</span>}/>}
+          <ListRow title="User button GPIO27 / D4" trailing={<span>{tele?.outputs?.GPIO27?'HIGH':'LOW'}</span>}/>
+        </ListGroup>
+      )}
       <PinsGroup comp={comp} entry={entry} tele={tele} />
       {tele && <LiveGroup tele={tele} />}
 

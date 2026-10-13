@@ -92,6 +92,7 @@ const ID_PREFIX: Record<string, string> = {
   pushbutton: 'PB',
   slide_switch: 'SW',
   dip_switch_8: 'SW',
+  firebeetle_esp32e: 'ESP',
   power_supply: 'PS',
   function_generator: 'FG',
   seven_segment: 'DISP',
@@ -357,7 +358,7 @@ function nudgeInstrumentsClear(layout: CircuitLayout): CircuitLayout {
     const entry = getEntry(c.type)
     if (entry?.placement === 'offboard') units.push({ compIndex, slot: slot++, pos: c.pos })
   })
-  const rects = units.map((u) => offboardBodyRect(u.slot, u.pos))
+  const rects = units.map((u) => offboardBodyRect(u.slot, u.pos, layout.components[u.compIndex].type))
   const moved = new Map<number, { x: number; z: number }>() // unit index → new pos
   for (let i = 0; i < units.length; i++) {
     const pos = units[i].pos
@@ -367,11 +368,11 @@ function nudgeInstrumentsClear(layout: CircuitLayout): CircuitLayout {
     if (!blocked(rects[i])) continue
     let x = pos.x
     const z = ext.maxZ + 2.5 // body rect minZ = z−2 → strictly past the board edge
-    let r = offboardBodyRect(units[i].slot, { x, z })
+    let r = offboardBodyRect(units[i].slot, { x, z }, layout.components[units[i].compIndex].type)
     let guard = 4 * units.length + 8 // every unit blocks ≤2 shelf steps; always terminates
     while (blocked(r) && guard-- > 0) {
       x += 7
-      r = offboardBodyRect(units[i].slot, { x, z })
+      r = offboardBodyRect(units[i].slot, { x, z }, layout.components[units[i].compIndex].type)
     }
     moved.set(i, { x, z })
     rects[i] = r

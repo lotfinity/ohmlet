@@ -597,11 +597,15 @@ export function remapLayout(
  * (pin i sits at anchor + (2 + 2.5·i, 2), on the unit's front face), so a
  * unit without `pos` renders byte-identically to the pre-movable layouts.
  */
+import { firebeetleAnchor, firebeetlePinPosition } from './firebeetle'
+
 export function offboardTerminalPosition(
   slot: number,
   pinIndex: number,
   pos?: { x: number; z: number },
+  type?: string,
 ): { x: number; z: number } {
+  if (type === 'firebeetle_esp32e') return firebeetlePinPosition(slot, pinIndex, pos)
   const a = offboardBodyPosition(slot, pos)
   return { x: a.x + 2 + pinIndex * 2.5, z: a.z + 2 }
 }
@@ -613,7 +617,9 @@ export function offboardTerminalPosition(
 export function offboardBodyPosition(
   slot: number,
   pos?: { x: number; z: number },
+  type?: string,
 ): { x: number; z: number } {
+  if (type === 'firebeetle_esp32e') return firebeetleAnchor(slot,pos)
   return pos ?? { x: -10, z: 0 + slot * 7 }
 }
 
@@ -631,7 +637,12 @@ export const OFFBOARD_BODY_HEIGHT = 4
 export function offboardBodyRect(
   slot: number,
   pos?: { x: number; z: number },
+  type?: string,
 ): { minX: number; maxX: number; minZ: number; maxZ: number } {
+  if (type === 'firebeetle_esp32e') {
+    const a = firebeetleAnchor(slot, pos)
+    return {minX:a.x,maxX:a.x+10,minZ:a.z-0.5,maxZ:a.z+24}
+  }
   const a = offboardBodyPosition(slot, pos)
   return { minX: a.x, maxX: a.x + 6.5, minZ: a.z - 2, maxZ: a.z + 2.5 }
 }

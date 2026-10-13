@@ -20,6 +20,7 @@ import type { ComponentInstance, ComponentTelemetry, ParamValue } from '../model
 import type { CatalogEntry } from '../model/catalog'
 import { paramOf } from '../model/catalog'
 import { pnLimit } from './mna'
+import { FIREBEETLE_GPIOS, FIREBEETLE_INPUT_ONLY } from '../model/firebeetle'
 import type { StampContext } from './mna'
 
 // ------------------------------------------------------------- constants
@@ -726,6 +727,52 @@ class BuzzerDevice extends BaseDevice {
   }
 }
 
+
+class FireBeetleDevice extends BaseDevice {
+  private settings: Record<string, ParamValue>
+  private time = 0
+  private active = true
+  constructor(comp: ComponentInstance, entry: CatalogEntry, nodes: number[]) {
+    super(comp,entry,nodes)
+    this.settings = Object.fromEntries((entry.params ?? []).map(p=>[p.key,paramOf(comp.params,entry,p.key)!]))
+  }
+  beginStep(time:number):void { this.time=time }
+  setRuntimeParam(key:string,value:ParamValue):void { this.settings[key]=value }
+  private node(pin:string):number { return this.nodes[this.entry.pins.indexOf(pin)] }
+  private output(gpio:number):number|null {
+    if (!this.active || FIREBEETLE_INPUT_ONLY.includes(gpio)) return null
+    const mode=this.settings[`gpio${gpio}_mode`]
+    if (mode==='low') return 0
+    if (mode==='high') return 3.3
+    if (mode==='pwm') {
+      const f=Math.max(0.1,Math.min(1000,Number(this.settings[`gpio${gpio}_frequency`])||1))
+      const d=Math.max(0,Math.min(1,Number(this.settings[`gpio${gpio}_duty`])||0))
+      return (this.time*f)%1<d?3.3:0
+    }
+    return null
+  }
+  stamp(ctx:StampContext,x:Float64Array):void {
+    const g=this.node('GND')
+    const powered=this.settings.powered===true
+    // EN is pulled high; an external low or held-reset releases GPIOs.
+    ctx.addNorton(this.node('EN'),g,powered?3.3:0,10000)
+    this.active=powered && this.settings.reset!==true && (this.time===0 || vAt(x,this.node('EN'))-vAt(x,g)>0.8)
+    if (powered) {
+      ctx.addNorton(this.node('3V3'),g,3.3,0.1)
+      ctx.addNorton(this.node('VCC'),g,4.7,0.1)
+    }
+    for(const gpio of FIREBEETLE_GPIOS) {
+      const v=this.output(gpio)
+      if(v!==null) ctx.addNorton(this.node(`GPIO${gpio}`),g,v,40)
+    }
+  }
+  fillTelemetry(t:ComponentTelemetry):void {
+    t.outputs=Object.fromEntries(FIREBEETLE_GPIOS.map(g=>[`GPIO${g}`,(t.pinVoltages[`GPIO${g}`]??0)>1.65]))
+    t.outputs.GPIO27=this.settings.button!==true
+    t.ledBrightness=this.active?Math.max(0,Math.min(1,(t.pinVoltages.GPIO2??0)/3.3)):0
+  }
+}
+
 // ---------------------------------------------------------------- sources
 
 export class PowerSupplyDevice extends BaseDevice {
@@ -873,6 +920,8 @@ export function createDevice(
       return new SevenSegmentDevice(comp, entry, nodes)
     case 'buzzer':
       return new BuzzerDevice(comp, entry, nodes)
+    case 'firebeetle_esp32e':
+      return new FireBeetleDevice(comp, entry, nodes)
     case 'power_supply':
       return new PowerSupplyDevice(comp, entry, nodes)
     case 'function_generator':

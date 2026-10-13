@@ -182,6 +182,10 @@ export function buildNetlist(layout: CircuitLayout): Netlist {
   const ps = components.find((c) => c && c.type === 'power_supply')
   if (ps) ground = uf.find(netIdForTerminal(ps.id, '-'))
   if (!ground) {
+    const esp = components.find((c) => c && c.type === 'firebeetle_esp32e')
+    if (esp) ground = uf.find(netIdForTerminal(esp.id, 'GND'))
+  }
+  if (!ground) {
     const fg = components.find((c) => c && c.type === 'function_generator')
     if (fg) ground = uf.find(netIdForTerminal(fg.id, 'gnd'))
   }

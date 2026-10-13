@@ -50,6 +50,7 @@ import blinky555 from '../../../examples/blinky-555.json'
 import dateDisplay from '../../../examples/date-display.json'
 import counter from '../../../examples/counter.json'
 import nightLight from '../../../examples/night-light.json'
+import firebeetleBlink from '../../../examples/firebeetle-blink.json'
 import pkg from '../../../package.json'
 import './asm-sheets.css'
 
@@ -117,6 +118,7 @@ interface ExampleEntry {
 }
 
 const EXAMPLES: readonly ExampleEntry[] = [
+  { title: 'FireBeetle ESP32 LED blink', layout: firebeetleBlink as unknown as CircuitLayout },
   { title: '555 LED blinker', layout: blinky555 as unknown as CircuitLayout },
   { title: 'Date display', layout: dateDisplay as unknown as CircuitLayout },
   { title: '0–9 counter', layout: counter as unknown as CircuitLayout },
