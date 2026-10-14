@@ -46,6 +46,7 @@ import {
   updateComponentVisual,
   type BuiltComponent,
 } from './component-meshes'
+import { offboardTerminalHeight } from '../model/firebeetle'
 import type { RoutedComponent } from './internal/wire-router'
 import type {
   GhostSpec,
@@ -2200,14 +2201,14 @@ export class BreadboardScene implements IBreadboardScene {
         // explicit bench position (movable instruments) overrides the shelf
         const p = offboardTerminalPosition(slot, i, comp.pos, comp.type)
         pinPositions.push(new THREE.Vector3(p.x, 0, p.z))
-        attach.push(new THREE.Vector3(p.x, TERMINAL_TOP_Y, p.z))
+        attach.push(new THREE.Vector3(p.x, offboardTerminalHeight(comp.type), p.z))
 
         // invisible hit proxy aligned over the instrument mesh's panel-
         // mounted post (the ONLY rendered post) — raycasts/touch picking
         // keep their generous target without a second, floating visual
         const post = new THREE.Mesh(m.postGeo, m.postMat)
         post.visible = false
-        post.position.set(p.x, TERMINAL_TOP_Y + POST_PROXY_DY, p.z + POST_PROXY_DZ)
+        post.position.set(p.x, offboardTerminalHeight(comp.type) + POST_PROXY_DY, p.z + (comp.type === 'firebeetle_esp32e' ? 0 : POST_PROXY_DZ))
         post.userData.terminalRef = `${comp.id}:${pin}`
         // static between edits (B2) — instrument drags updateMatrix explicitly
         post.updateMatrix()
@@ -2936,7 +2937,7 @@ export class BreadboardScene implements IBreadboardScene {
     } else if (target) {
       px = target.x
       pz = target.z
-      py = TERMINAL_TOP_Y + 0.05 // ring sits on the post top
+      py = offboardTerminalHeight(this.components.get(target.ref.split(':')[0])?.comp.type ?? '') + 0.05
     }
     m.fingertipGroup.position.set(px, py, pz)
     m.fingertipGroup.visible = true

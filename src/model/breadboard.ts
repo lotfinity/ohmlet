@@ -641,7 +641,7 @@ export function offboardBodyRect(
 ): { minX: number; maxX: number; minZ: number; maxZ: number } {
   if (type === 'firebeetle_esp32e') {
     const a = firebeetleAnchor(slot, pos)
-    return {minX:a.x,maxX:a.x+10,minZ:a.z-0.5,maxZ:a.z+24}
+    return {minX:a.x-0.1,maxX:a.x+10.1,minZ:a.z-0.65,maxZ:a.z+24}
   }
   const a = offboardBodyPosition(slot, pos)
   return { minX: a.x, maxX: a.x + 6.5, minZ: a.z - 2, maxZ: a.z + 2.5 }

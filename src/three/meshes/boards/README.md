@@ -21,12 +21,16 @@ is exposed in telemetry, not as an invented external header contact.
 GPIO5/WS2812, GDI, and wireless protocols are not implemented.
 
 ## Models
-The procedural PCB is 25.4 × 60 mm at 2.54 mm per scene unit.
+The CAD-derived GLB is built from DFRobot’s STEP model and product photos.
+The nominal PCB is 25.4 × 60 mm at 2.54 mm per scene unit.
+The model is lazy-loaded and cached; the procedural board is a loading/error fallback.
+See public/models/firebeetle-esp32e.SOURCES.md for the asset provenance.
 Header contacts use a single shared geometry mapping for scene picking,
 wire routing, collision validation and placement. The board sits beside
 the breadboard and can be dragged; layout positions and parameters survive
-JSON export/import and undo/redo. Cosmetic component placement is approximate,
-not a manufacturer CAD reproduction.
+JSON export/import and undo/redo. Small features are simplified, female socket openings are retained explicitly,
+and the RF shield/underside use photo textures. Socket attachment height is
+measured from the CAD model; electrical pin identifiers remain unchanged.
 
 USB power is an idealized source (3.3V rail, approximately 4.7V VCC). GPIO
 drivers have 40-ohm output impedance; inputs release their drive. PWM uses

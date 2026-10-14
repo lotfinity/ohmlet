@@ -9,7 +9,15 @@ export const FIREBEETLE_ALIASES: Record<number,string> = {0:'D5',1:'TX',2:'D9 / 
 export function firebeetleAnchor(slot: number, pos?: {x:number;z:number}) {
  return pos ?? {x:-24,z:slot*30}
 }
+// Socket centres and height measured from the manufacturer's DFR0654 STEP model.
+export const FIREBEETLE_SOCKET_Y = (8.3 + 1.8064) / 2.54
+export const FIREBEETLE_LEFT_X = 1.25 / 2.54
+export const FIREBEETLE_RIGHT_X = 24.25 / 2.54
+export const FIREBEETLE_FIRST_Z = 11.62 / 2.54
+export function offboardTerminalHeight(type: string): number {
+ return type === 'firebeetle_esp32e' ? FIREBEETLE_SOCKET_Y : 0.7
+}
 export function firebeetlePinPosition(slot:number, index:number, pos?:{x:number;z:number}) {
  const a=firebeetleAnchor(slot,pos)
- return index<18 ? {x:a.x+0.65,z:a.z+4+index} : {x:a.x+9.35,z:a.z+8+index-18}
+ return index<18 ? {x:a.x+FIREBEETLE_LEFT_X,z:a.z+FIREBEETLE_FIRST_Z+index} : {x:a.x+FIREBEETLE_RIGHT_X,z:a.z+FIREBEETLE_FIRST_Z+4+index-18}
 }

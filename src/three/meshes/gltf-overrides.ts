@@ -75,7 +75,7 @@ export function loadModelOverride(type: string): Promise<THREE.Group | null> {
   return p
 }
 
-async function loadGltfScene(url: string): Promise<THREE.Group> {
+export async function loadGltfScene(url: string): Promise<THREE.Group> {
   // dynamic import: the loader (and anything it pulls in) stays out of the
   // bundle's critical path and is never evaluated unless an override exists
   const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')

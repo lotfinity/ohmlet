@@ -101,6 +101,7 @@ const TEXTURE_SLOTS = [
  * (they live for the page lifetime — see meshes/shared.ts).
  */
 export function disposeComponentObject(root: THREE.Object3D): void {
+  root.userData.disposed = true
   const geos = new Set<THREE.BufferGeometry>()
   const mats = new Set<THREE.Material>()
   root.traverse((o) => {

@@ -57,6 +57,8 @@ import {
 } from './wire-router'
 
 /** y of the top of an off-board terminal post (wire attachment point). */
+import { offboardTerminalHeight } from '../../model/firebeetle'
+
 export const TERMINAL_TOP_Y = 0.7
 
 /** Jumper-wire palette used when a wire has no (valid) explicit color. */
@@ -273,7 +275,7 @@ export function instrumentsForLayout(layout: CircuitLayout): InstrumentObstacle[
     out.push({
       id: comp.id,
       ...rect,
-      height: OFFBOARD_BODY_HEIGHT,
+      height: comp.type === 'firebeetle_esp32e' ? 4.1 : OFFBOARD_BODY_HEIGHT,
       terminals: entry.pins.map((_pin, i) => {
         const p = offboardTerminalPosition(mySlot, i, comp.pos, comp.type)
         return { x: p.x, z: p.z, exitDir: comp.type === 'firebeetle_esp32e' ? {x: i < 18 ? -1 : 1, z: 0} : { x: 0, z: 1 } }
@@ -360,7 +362,7 @@ function makeEndpointResolver(
     if (pinIdx < 0) return null
     // explicit instrument pos (movable instruments) overrides the slot shelf
     const p = offboardTerminalPosition(rec.slot, pinIdx, rec.pos, rec.entry.type)
-    return { x: p.x, y: TERMINAL_TOP_Y, z: p.z }
+    return { x: p.x, y: offboardTerminalHeight(rec.entry.type), z: p.z }
   }
 }
 
