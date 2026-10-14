@@ -1,0 +1,11 @@
+[Unit]
+Description=Ohmlet MCP electronics workbench
+After=network.target
+[Service]
+WorkingDirectory=/home/lofa/Projects/ohmlet
+ExecStart=/usr/bin/node /home/lofa/Projects/ohmlet/server/dist/index.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+[Install]
+WantedBy=default.target

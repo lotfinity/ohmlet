@@ -1,3 +1,4 @@
+import { startMcpBridge } from './mcp/bridge'
 /**
  * App shell — phone-first "liquid glass" chrome over the full-bleed 3D canvas
  * (DESIGN.md §2). Owns the single BreadboardScene instance and all of the
@@ -397,6 +398,7 @@ type SheetKey = 'parts' | 'ai' | 'scope' | 'more'
 type DockKey = SheetKey | 'wire' | 'none'
 
 export default function App() {
+  useEffect(() => startMcpBridge(), [])
   const containerRef = useRef<HTMLDivElement | null>(null)
   const isDesktop = useIsDesktop()
 

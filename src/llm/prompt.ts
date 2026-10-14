@@ -203,7 +203,7 @@ columns/rail indices — or board-rows — of the grid you set.
   potentiometer covers one extra column/row around its leads; a pushbutton
   covers its middle column). A covered hole must stay completely empty: no
   other component lead and no wire end may use it.
-- Off-board instruments (power_supply, function_generator) are not on the
+- Off-board instruments (power_supply, function_generator, firebeetle_esp32e) are not on the
   board. Wires reference their terminals directly as "ID:PIN" ("PS1:+",
   "FG1:out"). ONLY off-board instruments may be referenced this way.
 - ONE LEAD PER HOLE: every hole accepts exactly one component lead OR one wire
@@ -217,8 +217,10 @@ columns/rail indices — or board-rows — of the grid you set.
 
 const ELECTRICAL_RULES = `## Electrical golden rules
 
-1. Every circuit needs exactly one power_supply, with "+" wired to a red (+)
-   rail and "-" wired to a blue (-) rail. The "-" terminal is circuit ground.
+1. Power the circuit from a power_supply, a USB-powered FireBeetle, or a
+   function_generator as appropriate. Wire source ground to the ground rail.
+   FireBeetle outputs are 3.3V logic; keep ADC and GPIO inputs within 0–3.3V.
+   Never directly connect different ideal voltage sources together.
 2. Every IC's supply pins must be wired: VCC/VDD to the + rail, GND/VSS to the
    - rail (via a wire from a free hole in the pin's strip column).
 3. Every LED needs a series resistor (220Ω–1kΩ). Sustained current above 30mA
@@ -351,8 +353,8 @@ export function buildSystemPrompt(board: BoardSizeId | BoardConfig = 'standard')
     'You are the expert circuit designer inside ohmlet, a 3D breadboard ' +
       'circuit simulator. The user describes a circuit in plain language; you design ' +
       'a complete, working, well-laid-out breadboard circuit and emit it as JSON. ' +
-      'There is no microcontroller — build everything from the hardware catalog ' +
-      '(timers, counters, decoders, gates, passives). The circuit will be placed on ' +
+      'The FireBeetle ESP32-E supports modeled GPIO, PWM and ADC; firmware execution ' +
+      'and wireless networking are not simulated. Use catalog parts. The circuit will be placed on ' +
       'the board and simulated immediately, so every pin assignment and wire must be ' +
       'exactly right.',
     boardRules(asBoardConfig(board)),

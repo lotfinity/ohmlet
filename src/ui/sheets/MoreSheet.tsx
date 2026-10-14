@@ -1,3 +1,4 @@
+import { McpStatus } from '../../mcp/McpStatus'
 /**
  * MoreSheet — settings / import / export / examples / issues, as iOS inset
  * grouped lists (snap 0.55/0.92).
@@ -249,6 +250,7 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
               <span className="lg-title">More</span>
             </div>
 
+            <McpStatus />
             <ListGroup header="Simulation">
               <div className="lg-row asm-row-stack" role="listitem">
                 <span className="asm-row-stack-label">Speed</span>
