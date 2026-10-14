@@ -51,6 +51,12 @@ import dateDisplay from '../../../examples/date-display.json'
 import counter from '../../../examples/counter.json'
 import nightLight from '../../../examples/night-light.json'
 import firebeetleBlink from '../../../examples/firebeetle-blink.json'
+import firebeetleButton from '../../../examples/firebeetle-button.json'
+import firebeetleAdcPot from '../../../examples/firebeetle-adc-pot.json'
+import firebeetlePwmDimming from '../../../examples/firebeetle-pwm-dimming.json'
+import firebeetleMosfet from '../../../examples/firebeetle-mosfet.json'
+import firebeetleDivider from '../../../examples/firebeetle-divider.json'
+import acDcSmoothing from '../../../examples/ac-dc-smoothing.json'
 import pkg from '../../../package.json'
 import './asm-sheets.css'
 
@@ -118,6 +124,12 @@ interface ExampleEntry {
 }
 
 const EXAMPLES: readonly ExampleEntry[] = [
+  { title: 'ESP32 button input', layout: firebeetleButton as unknown as CircuitLayout },
+  { title: 'ESP32 potentiometer / ADC', layout: firebeetleAdcPot as unknown as CircuitLayout },
+  { title: 'ESP32 PWM LED dimming', layout: firebeetlePwmDimming as unknown as CircuitLayout },
+  { title: 'ESP32 MOSFET LED switching', layout: firebeetleMosfet as unknown as CircuitLayout },
+  { title: 'ESP32 12V signal divider', layout: firebeetleDivider as unknown as CircuitLayout },
+  { title: 'AC-to-DC rectifier + smoothing', layout: acDcSmoothing as unknown as CircuitLayout },
   { title: 'FireBeetle ESP32 LED blink', layout: firebeetleBlink as unknown as CircuitLayout },
   { title: '555 LED blinker', layout: blinky555 as unknown as CircuitLayout },
   { title: 'Date display', layout: dateDisplay as unknown as CircuitLayout },
@@ -142,6 +154,7 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
   const exportJson = useStore((s) => s.exportJson)
   const select = useStore((s) => s.select)
   const layoutName = useStore((s) => s.layout.name)
+  const layoutDescription = useStore((s) => s.layout.description)
   const board = useStore((s) => boardOf(s.layout))
   const setBoardSize = useStore((s) => s.setBoardSize)
   // primitive selector (not boardConfigOf — a fresh object per call would
@@ -357,12 +370,14 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
               />
             </ListGroup>
 
+            {layoutDescription && <ListGroup header="Current lesson"><ListRow title={layoutName ?? "Circuit"} subtitle={layoutDescription} /></ListGroup>}
+
             <ListGroup header="Examples" footer="Loading an example replaces the current circuit.">
               {EXAMPLES.map((ex) => (
                 <ListRow
                   key={ex.title}
                   title={ex.title}
-                  subtitle={`${ex.layout.components.length} parts · ${ex.layout.wires.length} wires`}
+                  subtitle={ex.layout.description?.split('. ')[0] ?? `${ex.layout.components.length} parts · ${ex.layout.wires.length} wires`}
                   chevron
                   onPress={() => onLoadExample(ex)}
                 />

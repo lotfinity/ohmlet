@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "name": "FireBeetle: PWM LED dimming",
+  "description": "GPIO2/D9 drives a red LED through 330 ohms. Run and select ESP1 \u2192 GPIO2; change PWM duty to adjust brightness. The default is 100Hz, 25% duty. Scope channel 1 shows 3.3V pulses; the LED switches rapidly and average light increases with duty. Manual PWM controls, not an uploaded fade sketch.",
+  "components": [
+    {
+      "id": "ESP1",
+      "type": "firebeetle_esp32e",
+      "params": {
+        "gpio2_mode": "pwm",
+        "gpio2_frequency": 100,
+        "gpio2_duty": 0.25
+      }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "j10",
+        "j14"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    },
+    {
+      "id": "LED1",
+      "type": "led",
+      "holes": [
+        "i14",
+        "i18"
+      ],
+      "params": {
+        "color": "red"
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "a10"
+      ],
+      "params": {
+        "channel": 1
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "ESP1:GPIO2",
+      "to": "h10",
+      "color": "green"
+    },
+    {
+      "id": "W2",
+      "from": "ESP1:GND",
+      "to": "j18",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "g10",
+      "to": "b10",
+      "color": "yellow"
+    }
+  ]
+}

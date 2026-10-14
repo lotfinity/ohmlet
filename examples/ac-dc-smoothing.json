@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "name": "AC \u2192 diode \u2192 smoothing capacitor",
+  "description": "Low-voltage half-wave rectifier: a 50Hz sine wave (6V nominal peak, not RMS) passes through a diode; a 100uF capacitor smooths the output into DC across a 1k load. Scope channel 1 shows loaded AC and channel 2 shows DC with ripple. The generator has 50 ohms output resistance, so capacitor-charging current reduces the positive input peak. Run, then change C1 capacitance or R1 resistance and compare ripple. This illustrates rectification/filtering from our LED-driver discussion; it does not model a 220V bulb driver, transformer or regulated 5V supply.",
+  "components": [
+    {
+      "id": "FG1",
+      "type": "function_generator",
+      "params": {
+        "waveform": "sine",
+        "frequency": 50,
+        "amplitude": 6,
+        "offset": 0
+      }
+    },
+    {
+      "id": "D1",
+      "type": "diode",
+      "holes": [
+        "a10",
+        "a15"
+      ]
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "b15",
+        "top-2"
+      ],
+      "params": {
+        "resistance": 1000
+      }
+    },
+    {
+      "id": "C1",
+      "type": "capacitor",
+      "holes": [
+        "c15",
+        "top-3"
+      ],
+      "params": {
+        "capacitance": 0.0001,
+        "polarized": true
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "b10"
+      ],
+      "params": {
+        "channel": 1
+      }
+    },
+    {
+      "id": "P2",
+      "type": "scope_probe",
+      "holes": [
+        "d15"
+      ],
+      "params": {
+        "channel": 2
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "FG1:out",
+      "to": "c10",
+      "color": "yellow"
+    },
+    {
+      "id": "W2",
+      "from": "FG1:gnd",
+      "to": "top-0",
+      "color": "black"
+    }
+  ]
+}

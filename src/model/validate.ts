@@ -703,7 +703,7 @@ export function validateLayout(input: unknown): ValidationResult {
 
   // ---- warnings (static electrical checks) ----------------------------------
   const supplies = [...byId.values()].filter((c) => c.entry.type === 'power_supply' || c.entry.type === 'firebeetle_esp32e')
-  if (supplies.length === 0) {
+  if (supplies.length === 0 && ![...byId.values()].some(c => c.entry.type === 'function_generator')) {
     warnings.push(
       'no power_supply in the layout — add one and wire its "+" and "-" terminals to the power rails',
     )

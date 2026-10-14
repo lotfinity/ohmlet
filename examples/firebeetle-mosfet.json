@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "name": "FireBeetle: MOSFET LED switching",
+  "description": "Use GPIO16/D11 to switch a separate 5V LED circuit through an N-MOSFET. GPIO feeds its gate through 100 ohms; a 100k gate-to-ground resistor keeps it off if GPIO floats. Run, select ESP1 \u2192 GPIO16 and change HIGH/LOW/PWM. Grounds are joined. This uses a small LED load and simplified 2N7000 model; it is not a high-power strip driver.",
+  "components": [
+    {
+      "id": "ESP1",
+      "type": "firebeetle_esp32e",
+      "params": {
+        "gpio16_mode": "pwm",
+        "gpio16_frequency": 1,
+        "gpio16_duty": 0.5
+      }
+    },
+    {
+      "id": "PS1",
+      "type": "power_supply",
+      "params": {
+        "voltage": 5
+      }
+    },
+    {
+      "id": "Q1",
+      "type": "nmos",
+      "holes": [
+        "a10",
+        "a12",
+        "a14"
+      ]
+    },
+    {
+      "id": "RG",
+      "type": "resistor",
+      "holes": [
+        "b12",
+        "b18"
+      ],
+      "params": {
+        "resistance": 100
+      }
+    },
+    {
+      "id": "RP",
+      "type": "resistor",
+      "holes": [
+        "c12",
+        "top-3"
+      ],
+      "params": {
+        "resistance": 100000
+      }
+    },
+    {
+      "id": "RL",
+      "type": "resistor",
+      "holes": [
+        "top+2",
+        "a22"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    },
+    {
+      "id": "LED1",
+      "type": "led",
+      "holes": [
+        "b22",
+        "b14"
+      ],
+      "params": {
+        "color": "red"
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "d12"
+      ],
+      "params": {
+        "channel": 1
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "PS1:+",
+      "to": "top+0",
+      "color": "red"
+    },
+    {
+      "id": "W2",
+      "from": "PS1:-",
+      "to": "top-0",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "ESP1:GND",
+      "to": "top-1",
+      "color": "black"
+    },
+    {
+      "id": "W4",
+      "from": "ESP1:GPIO16",
+      "to": "c18",
+      "color": "green"
+    },
+    {
+      "id": "W5",
+      "from": "b10",
+      "to": "top-2",
+      "color": "black"
+    }
+  ]
+}

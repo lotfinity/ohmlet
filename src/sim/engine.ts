@@ -188,7 +188,7 @@ export class SimEngine {
           continue
         }
         rt.entry = entry
-        if (comp.type === 'power_supply' || comp.type === 'firebeetle_esp32e') hasSupply = true
+        if (comp.type === 'power_supply' || comp.type === 'firebeetle_esp32e' || comp.type === 'function_generator') hasSupply = true
 
         const nodes = this.resolvePinNodes(comp, entry)
         if (!nodes) {

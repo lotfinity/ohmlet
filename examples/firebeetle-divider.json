@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "name": "FireBeetle: 12V signal divider",
+  "description": "Two resistors reduce a 0\u201312V signal to approximately 0\u20133V for GPIO34/A2: 39k on top, 13k to ground. Run, select PS1 and change voltage within 0\u201312V; select ESP1 \u2192 GPIO34 for the ADC reading. Scope 1 is the input, scope 2 the divided output. This is a DC measurement lesson, not a decoder for LED-strip data. Values must be chosen for the actual maximum signal voltage.",
+  "components": [
+    {
+      "id": "ESP1",
+      "type": "firebeetle_esp32e"
+    },
+    {
+      "id": "PS1",
+      "type": "power_supply",
+      "params": {
+        "voltage": 12
+      }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "a10",
+        "a15"
+      ],
+      "params": {
+        "resistance": 39000
+      }
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "holes": [
+        "b15",
+        "top-2"
+      ],
+      "params": {
+        "resistance": 13000
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "b10"
+      ],
+      "params": {
+        "channel": 1
+      }
+    },
+    {
+      "id": "P2",
+      "type": "scope_probe",
+      "holes": [
+        "d15"
+      ],
+      "params": {
+        "channel": 2
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "PS1:+",
+      "to": "c10",
+      "color": "red"
+    },
+    {
+      "id": "W2",
+      "from": "PS1:-",
+      "to": "top-0",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "ESP1:GND",
+      "to": "top-1",
+      "color": "black"
+    },
+    {
+      "id": "W4",
+      "from": "ESP1:GPIO34",
+      "to": "c15",
+      "color": "green"
+    }
+  ]
+}
