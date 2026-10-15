@@ -20,6 +20,7 @@ import type { ComponentInstance, ComponentTelemetry, ParamValue } from '../model
 import type { CatalogEntry } from '../model/catalog'
 import { paramOf } from '../model/catalog'
 import { pnLimit } from './mna'
+import {RGB_PRESETS} from '../model/rgb-controller'
 import { FIREBEETLE_GPIOS, FIREBEETLE_INPUT_ONLY } from '../model/firebeetle'
 import type { StampContext } from './mna'
 
@@ -883,6 +884,40 @@ class FunctionGeneratorDevice extends BaseDevice {
  * `nodes` holds the solver node index of each catalog pin (-1 = ground).
  * Returns null for unknown model names.
  */
+
+// Photo-derived externally powered low-side switches. No IR protocol emulation.
+class RgbControllerDevice extends BaseDevice {
+ readonly nonlinear = true
+ private time=0
+ private active=[false,false,false]
+ beginStep(time:number):void {this.time=time}
+ setRuntimeParam(key:string,value:ParamValue):void {
+  this.comp.params={...this.comp.params,[key]:value}
+ }
+ stamp(ctx:StampContext,x:Float64Array):void {
+  const supply=vAt(x,this.nodes[0])-vAt(x,this.nodes[1])
+  const enabled=this.bool('enabled',true) && supply>=9 && supply<=13
+  let levels=[this.num('red',1),this.num('green',0),this.num('blue',0)]
+  const preset=this.str('preset','custom')
+  if(RGB_PRESETS[preset])levels=RGB_PRESETS[preset]
+  const cycle=this.time*Math.min(10,Math.max(.05,this.num('speed',.5)))
+  if(preset==='jump3')levels=[0,1,2].map(i=>Math.floor(cycle)%3===i?1:0)
+  if(preset==='fade3')levels=[0,1,2].map(i=>Math.max(0,1-Math.min((cycle-i+300)%3,3-(cycle-i+300)%3)))
+  if(preset==='flash')levels=[1,1,1].map(()=>cycle%1<.5?1:0)
+  const phase=(this.time*Math.min(1000,Math.max(1,this.num('frequency',100))))%1
+  // Logical pins are VIN,GND,+12V,G,R,B,VIR,GND_IR,IR.
+  for(let i=0;i<3;i++){
+   const duty=Math.min(1,Math.max(0,levels[i]*this.num('brightness',1)))
+   this.active[i]=enabled && (duty===1 || phase<duty)
+   ctx.addConductance(this.nodes[[4,3,5][i]],this.nodes[1],this.active[i]?10:G_OFF)
+  }
+ }
+ fillTelemetry(t:ComponentTelemetry):void {
+  // True denotes a conducting low-side switch, not a high voltage output.
+  t.outputs={R:this.active[0],G:this.active[1],B:this.active[2]}
+ }
+}
+
 export function createDevice(
   model: string,
   comp: ComponentInstance,
@@ -920,6 +955,8 @@ export function createDevice(
       return new SevenSegmentDevice(comp, entry, nodes)
     case 'buzzer':
       return new BuzzerDevice(comp, entry, nodes)
+    case 'als001_rgb_controller':
+      return new RgbControllerDevice(comp,entry,nodes)
     case 'firebeetle_esp32e':
       return new FireBeetleDevice(comp, entry, nodes)
     case 'power_supply':

@@ -597,6 +597,7 @@ export function remapLayout(
  * (pin i sits at anchor + (2 + 2.5·i, 2), on the unit's front face), so a
  * unit without `pos` renders byte-identically to the pre-movable layouts.
  */
+import {rgbControllerAnchor,rgbControllerPinPosition,RGB_CONTROLLER_WIDTH,RGB_CONTROLLER_LENGTH} from './rgb-controller'
 import { firebeetleAnchor, firebeetlePinPosition } from './firebeetle'
 
 export function offboardTerminalPosition(
@@ -605,6 +606,7 @@ export function offboardTerminalPosition(
   pos?: { x: number; z: number },
   type?: string,
 ): { x: number; z: number } {
+  if (type === 'als001_rgb_controller') return rgbControllerPinPosition(slot,pinIndex,pos)
   if (type === 'firebeetle_esp32e') return firebeetlePinPosition(slot, pinIndex, pos)
   const a = offboardBodyPosition(slot, pos)
   return { x: a.x + 2 + pinIndex * 2.5, z: a.z + 2 }
@@ -619,6 +621,7 @@ export function offboardBodyPosition(
   pos?: { x: number; z: number },
   type?: string,
 ): { x: number; z: number } {
+  if (type === 'als001_rgb_controller') return rgbControllerAnchor(slot,pos)
   if (type === 'firebeetle_esp32e') return firebeetleAnchor(slot,pos)
   return pos ?? { x: -10, z: 0 + slot * 7 }
 }
@@ -639,6 +642,10 @@ export function offboardBodyRect(
   pos?: { x: number; z: number },
   type?: string,
 ): { minX: number; maxX: number; minZ: number; maxZ: number } {
+  if (type === 'als001_rgb_controller') {
+    const a=rgbControllerAnchor(slot,pos)
+    return {minX:a.x-.1,maxX:a.x+RGB_CONTROLLER_WIDTH+.1,minZ:a.z-1.3,maxZ:a.z+RGB_CONTROLLER_LENGTH+.1}
+  }
   if (type === 'firebeetle_esp32e') {
     const a = firebeetleAnchor(slot, pos)
     return {minX:a.x-0.1,maxX:a.x+10.1,minZ:a.z-0.65,maxZ:a.z+24}

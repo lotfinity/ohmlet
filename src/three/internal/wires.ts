@@ -275,10 +275,10 @@ export function instrumentsForLayout(layout: CircuitLayout): InstrumentObstacle[
     out.push({
       id: comp.id,
       ...rect,
-      height: comp.type === 'firebeetle_esp32e' ? 4.1 : OFFBOARD_BODY_HEIGHT,
+      height: comp.type === 'firebeetle_esp32e' ? 4.1 : comp.type === 'als001_rgb_controller' ? 3.1 : OFFBOARD_BODY_HEIGHT,
       terminals: entry.pins.map((_pin, i) => {
         const p = offboardTerminalPosition(mySlot, i, comp.pos, comp.type)
-        return { x: p.x, z: p.z, exitDir: comp.type === 'firebeetle_esp32e' ? {x: i < 18 ? -1 : 1, z: 0} : { x: 0, z: 1 } }
+        return { x: p.x, z: p.z, exitDir: comp.type === 'firebeetle_esp32e' ? {x: i < 18 ? -1 : 1, z: 0} : comp.type === 'als001_rgb_controller' ? {x:0,z:i<2?-1:1} : { x: 0, z: 1 } }
       }),
     })
   }

@@ -2208,7 +2208,7 @@ export class BreadboardScene implements IBreadboardScene {
         // keep their generous target without a second, floating visual
         const post = new THREE.Mesh(m.postGeo, m.postMat)
         post.visible = false
-        post.position.set(p.x, offboardTerminalHeight(comp.type) + POST_PROXY_DY, p.z + (comp.type === 'firebeetle_esp32e' ? 0 : POST_PROXY_DZ))
+        post.position.set(p.x, offboardTerminalHeight(comp.type) + POST_PROXY_DY, p.z + (['firebeetle_esp32e','als001_rgb_controller'].includes(comp.type) ? 0 : POST_PROXY_DZ))
         post.userData.terminalRef = `${comp.id}:${pin}`
         // static between edits (B2) — instrument drags updateMatrix explicitly
         post.updateMatrix()

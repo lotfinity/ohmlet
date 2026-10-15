@@ -93,6 +93,21 @@ export interface CatalogEntry {
 const E = (e: CatalogEntry) => e
 
 export const CATALOG: Record<string, CatalogEntry> = {
+  als001_rgb_controller: E({
+    type:'als001_rgb_controller',label:'ALS-001-V1 · 12V RGB controller',category:'ic',placement:'offboard',
+    pins:['VIN','GND','+12V','G','R','B','VIR','GND_IR','IR'],
+    internalBridges:[['VIN','+12V'],['GND','GND_IR']],
+    params:[
+      {key:'enabled',label:'Remote power',kind:'boolean',default:true,runtime:true},
+      {key:'preset',label:'Virtual remote (approximate)',kind:'select',default:'custom',options:['custom','red','green','blue','white','yellow','cyan','magenta','orange','jump3','fade3','flash'],runtime:true},
+      ...['red','green','blue'].map((key):ParamDef=>({key,label:key+' level',kind:'number',default:key==='red'?1:0,min:0,max:1,step:.01,runtime:true})),
+      {key:'brightness',label:'Brightness',kind:'number',default:1,min:0,max:1,step:.01,runtime:true},
+      {key:'frequency',label:'PWM (unmeasured; adjustable model)',kind:'number',default:100,min:1,max:1000,unit:'Hz',runtime:true},
+      {key:'speed',label:'Effect speed',kind:'number',default:.5,min:.05,max:10,unit:'cycles/s',runtime:true},
+    ],
+    sim:{kind:'device',model:'als001_rgb_controller'},visual:{shape:'als001'},
+    doc:'Photo-derived ALS-001-V1 analog RGB strip controller. Supply external 12V at VIN/GND. +12V bridges VIN; G/R/B are green/red/blue low-side PWM sinks, NOT positive sources. Receiver GND_IR bridges GND. VIR (photo label appears +6V) and IR are unmodeled high-impedance pads. Use strip with common positive or individual LEDs with series resistors. Virtual remote presets/effects and 100Hz default PWM are approximations; no real IR decoder, firmware or current/thermal rating. Estimated PCB 34x19mm.',
+  }),
   firebeetle_esp32e: E({
     type: 'firebeetle_esp32e', label: 'FireBeetle 2 ESP32-E (DFR0654-F)', category: 'ic',
     placement: 'offboard', pins: FIREBEETLE_PINS,

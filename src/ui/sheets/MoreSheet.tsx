@@ -47,6 +47,7 @@ import {
 import { ApiKeyRow } from './ApiKeyRow'
 // Static imports: fetch('/examples/…') would 404 in dev (repo-root files are
 // not served), so the curated layouts are bundled (resolveJsonModule).
+import rgbController from '../../../examples/als001-rgb-controller.json'
 import blinky555 from '../../../examples/blinky-555.json'
 import dateDisplay from '../../../examples/date-display.json'
 import counter from '../../../examples/counter.json'
@@ -125,6 +126,7 @@ interface ExampleEntry {
 }
 
 const EXAMPLES: readonly ExampleEntry[] = [
+  {title:'ALS-001 12V RGB controller',layout:rgbController as unknown as CircuitLayout},
   { title: 'ESP32 button input', layout: firebeetleButton as unknown as CircuitLayout },
   { title: 'ESP32 potentiometer / ADC', layout: firebeetleAdcPot as unknown as CircuitLayout },
   { title: 'ESP32 PWM LED dimming', layout: firebeetlePwmDimming as unknown as CircuitLayout },

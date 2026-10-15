@@ -40,6 +40,7 @@ import { buildLed, buildTo92 } from './meshes/semis'
 import { buildButton, buildDipSwitch, buildSlideSwitch } from './meshes/switches'
 import { buildDip, buildSevenSeg } from './meshes/ics'
 import { buildBuzzer, buildInstrumentBox, buildProbe } from './meshes/instruments'
+import {buildRgbController} from './meshes/boards/rgb-controller'
 import { buildFireBeetle } from './meshes/boards/firebeetle'
 import { tryModelOverride } from './meshes/gltf-overrides'
 
@@ -142,6 +143,7 @@ function dispatch(
   const shape = entry.visual?.shape
   try {
     switch (shape) {
+      case 'als001': return buildRgbController(comp,entry,pins)
       case 'firebeetle': return buildFireBeetle(comp, entry, pins)
       case 'resistor':
         if (pins.length >= 2) return buildResistor(comp, entry, pins, routed)

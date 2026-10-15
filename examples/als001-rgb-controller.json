@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "name": "ALS-001 RGB controller",
+  "description": "Photo-derived 12V controller. Three LED + 1k loads represent strip channels. Select CTRL1: change virtual remote preset, brightness or custom RGB levels while running. PWM/effects approximate; IR and receiver supply unmodeled.",
+  "components": [
+    {
+      "id": "PS1",
+      "type": "power_supply",
+      "pos": {
+        "x": -10,
+        "z": -10
+      },
+      "params": {
+        "voltage": 12
+      }
+    },
+    {
+      "id": "CTRL1",
+      "type": "als001_rgb_controller",
+      "pos": {
+        "x": -24,
+        "z": 0
+      },
+      "params": {
+        "preset": "white",
+        "frequency": 100
+      }
+    },
+    {
+      "id": "R0",
+      "type": "resistor",
+      "holes": [
+        "a1",
+        "a3"
+      ],
+      "params": {
+        "resistance": 1000
+      }
+    },
+    {
+      "id": "LED0",
+      "type": "led",
+      "holes": [
+        "b3",
+        "b4"
+      ],
+      "params": {
+        "color": "red"
+      }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "a6",
+        "a8"
+      ],
+      "params": {
+        "resistance": 1000
+      }
+    },
+    {
+      "id": "LED1",
+      "type": "led",
+      "holes": [
+        "b8",
+        "b9"
+      ],
+      "params": {
+        "color": "green"
+      }
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "holes": [
+        "a11",
+        "a13"
+      ],
+      "params": {
+        "resistance": 1000
+      }
+    },
+    {
+      "id": "LED2",
+      "type": "led",
+      "holes": [
+        "b13",
+        "b14"
+      ],
+      "params": {
+        "color": "blue"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "VIN",
+      "from": "PS1:+",
+      "to": "CTRL1:VIN"
+    },
+    {
+      "id": "GND",
+      "from": "PS1:-",
+      "to": "CTRL1:GND"
+    },
+    {
+      "id": "P0",
+      "from": "CTRL1:+12V",
+      "to": "b1"
+    },
+    {
+      "id": "C0",
+      "from": "c4",
+      "to": "CTRL1:R"
+    },
+    {
+      "id": "P1",
+      "from": "CTRL1:+12V",
+      "to": "b6"
+    },
+    {
+      "id": "C1",
+      "from": "c9",
+      "to": "CTRL1:G"
+    },
+    {
+      "id": "P2",
+      "from": "CTRL1:+12V",
+      "to": "b11"
+    },
+    {
+      "id": "C2",
+      "from": "c14",
+      "to": "CTRL1:B"
+    }
+  ]
+}
