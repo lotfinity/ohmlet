@@ -4,6 +4,7 @@ import {firmwareRuntime,useFirmware} from '../../firmware/runtime'
 import {Sheet,PressableButton} from '../kit'
 import type {CircuitLayout} from '../../model/types'
 import type {FirmwareImages} from '../../firmware/emulator'
+const SNAP_POINTS=[.55,.92] as const
 const examples=[['blink','LED blink'],['button','Button → LED'],['pwm','PWM dimming'],['adc_pwm','Pot → brightness']]
 export function FirmwareSheet({open,onDismiss,desktop}:{open:boolean;onDismiss:()=>void;desktop?:boolean}) {
   const [source,setSource]=useState(()=>{try{return localStorage.getItem('bb.firmwareSource')||''}catch{return ''}})
@@ -53,7 +54,7 @@ export function FirmwareSheet({open,onDismiss,desktop}:{open:boolean;onDismiss:(
       if(seq===generation.current)await attach(job.images)
     }catch(e){setError(String(e))}finally{if(seq===generation.current)setBusy(false)}
   }
-  return <Sheet open={open} onDismiss={onDismiss} desktop={desktop} anchor="right" snapPoints={[.55,.92]} activeSnap={snap} onSnapChange={setSnap} ariaLabel="ESP32 Firmware" className="asm-sheet">
+  return <Sheet open={open} onDismiss={onDismiss} desktop={desktop} anchor="right" snapPoints={SNAP_POINTS} activeSnap={snap} onSnapChange={setSnap} ariaLabel="ESP32 Firmware" className="asm-sheet">
     <div className="asm-content firmware-panel">
       <div className="asm-sheet-head"><span className="lg-title">ESP32 Firmware</span></div>
       <p>Run Arduino code on the FireBeetle and interact with your circuit.</p>
