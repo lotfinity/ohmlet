@@ -653,7 +653,7 @@ export default function App() {
     { key: 'wire', icon: <WireIcon size={26} />, label: 'Wire' },
     { key: 'ai', icon: <SparklesIcon size={26} />, label: 'AI' },
     { key: 'scope', icon: <WaveformIcon size={26} />, label: 'Scope' },
-    { key: 'firmware', icon: <span style={{fontFamily:'monospace',fontSize:20}}>{'</>'}</span>, label: 'Code' },
+    { key: 'firmware', icon: <span aria-hidden="true" style={{fontFamily:'monospace',fontSize:20}}>{'</>'}</span>, label: 'Code' },
     {
       key: 'more',
       icon: (
