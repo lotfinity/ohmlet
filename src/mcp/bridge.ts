@@ -1,3 +1,4 @@
+import { firmwareRuntime, useFirmware } from '../firmware/runtime'
 import { useStore } from '../state/store'
 
 export function startMcpBridge() {
@@ -35,6 +36,7 @@ export function startMcpBridge() {
           simTime: s.simTime,
           selection: s.selection,
           telemetry: s.telemetry,
+          firmware: { ...useFirmware.getState(), serial: useFirmware.getState().serial.slice(-4000) },
           lastCommand,
         }),
       })
@@ -64,6 +66,20 @@ export function startMcpBridge() {
       for (const c of data.commands) {
         if (c.id === lastCommand?.id) continue
         const state = useStore.getState()
+        if (c.action === 'firmware_load') {
+          const response=await fetch(`/api/firmware/jobs/${c.jobId}`)
+          const job=await response.json()
+          if(!response.ok||job.status!=='ready')throw Error('Firmware job is no longer available')
+          const keys=['rom','bootloader','partitions','app']
+          const values=await Promise.all(keys.map(async key=>{
+            const r=await fetch(job.images[key]);if(!r.ok)throw Error('Firmware image unavailable');return new Uint8Array(await r.arrayBuffer())
+          }))
+          const images=Object.fromEntries(keys.map((key,i)=>[key,values[i]])) as any
+          const layout=useStore.getState().layout
+          const board=layout.components.find(x=>x.type==='firebeetle_esp32e')
+          if(!board)throw Error('FireBeetle missing from circuit')
+          state.stopSim();await firmwareRuntime.load(layout,board.id,images)
+        }
         if (c.action === 'run') state.startSim()
         if (c.action === 'pause') state.stopSim()
         if (c.action === 'reset') state.resetSim()

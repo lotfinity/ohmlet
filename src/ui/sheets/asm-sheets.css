@@ -449,3 +449,16 @@
     animation: none;
   }
 }
+
+/* Firmware editor keeps its own scroll region on narrow screens. */
+.firmware-panel { padding-bottom: 40px; }
+.firmware-panel p, .firmware-panel small { line-height: 1.5; }
+.firmware-note { opacity: .75; font-size: 12px; }
+.firmware-label { display: block; margin: 16px 0 8px; font-size: 13px; font-weight: 600; }
+.firmware-label input[type=range] { display: block; width: 100%; margin-top: 12px; }
+.firmware-code { font: 12px/1.55 ui-monospace, monospace; width:100%; min-height:230px; tab-size:2; }
+.firmware-actions { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+.firmware-actions button { min-height:44px; border:1px solid #8885; border-radius:12px; padding:8px 12px; color:inherit; background:#8882; }
+.firmware-actions input { min-width:0; flex:1; border:1px solid #8885; border-radius:10px; color:inherit; background:#8881; padding:8px; }
+.firmware-console { white-space:pre-wrap; overflow:auto; max-height:220px; font:11px/1.5 ui-monospace,monospace; background:#0007; color:#d5f8df; padding:12px; border-radius:12px; word-break:break-word; }
+.firmware-error { color:#ff6b6b; overflow-wrap:anywhere; }

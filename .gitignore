@@ -7,3 +7,6 @@ demo/out/
 
 
 server/dist/
+
+.firmware-tools/
+.firmware-cache/

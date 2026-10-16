@@ -1,0 +1,50 @@
+diff --git a/wasm/src/lib.rs b/wasm/src/lib.rs
+index c1632e7..7344a29 100644
+--- a/wasm/src/lib.rs
++++ b/wasm/src/lib.rs
+@@ -460,3 +460,45 @@ pub extern "C" fn esp32sim_test_gpio_waveform() -> u32 {
+     gpio_waveform_tests::run();
+     24
+ }
++
++// Electrify host adapter. GPIO snapshots are observed between bounded run slices.
++/// # Safety
++/// `e` must be a live emulator with exclusive host access.
++#[no_mangle]
++pub unsafe extern "C" fn esp32sim_electrify_pin(e: *mut Emu, pin: u32) -> u32 {
++    if e.is_null() || pin > 39 { return 0; }
++    // SAFETY: guarded above; host guarantees exclusive live ownership.
++    let e = unsafe { &mut *e };
++    match e.m.bus().gpio_state(pin as u8) {
++        Some(s) => 16 | u32::from(s.output) | (u32::from(s.output_enable) << 1)
++            | (u32::from(s.pull_up) << 2) | (u32::from(s.pull_down) << 3),
++        None => 0,
++    }
++}
++/// # Safety
++/// `e` must be a live emulator with exclusive host access.
++#[no_mangle]
++pub unsafe extern "C" fn esp32sim_electrify_pwm(e: *mut Emu, pin: u32, field: u32) -> f64 {
++    if e.is_null() || pin > 39 { return -1.0; }
++    // SAFETY: guarded above; host guarantees exclusive live ownership.
++    let e = unsafe { &mut *e };
++    match e.m.bus().pwm_output(pin as u8) {
++        Some((hz, duty)) => if field == 0 { hz } else { f64::from(duty) / 65535.0 },
++        None => -1.0,
++    }
++}
++/// # Safety
++/// `e` must be a live emulator with exclusive host access.
++#[no_mangle]
++pub unsafe extern "C" fn esp32sim_electrify_input(e: *mut Emu, pin: u32, level: i32, volts: f64) {
++    if e.is_null() || pin > 39 { return; }
++    // SAFETY: guarded above; host guarantees exclusive live ownership.
++    let e = unsafe { &mut *e };
++    let b = e.m.bus();
++    if level < 0 { b.gpio_release_input(pin as u8); }
++    else { b.gpio_set_input(pin as u8, level != 0); }
++    if volts.is_finite() && (0.0..=3.3).contains(&volts) {
++        b.analog_set(pin as u8, esp_periph::AnalogSource::Const(volts as f32));
++    }
++    *b.irq_dirty() = true;
++}

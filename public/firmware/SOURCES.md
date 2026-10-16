@@ -1,0 +1,7 @@
+# Firmware runtime provenance
+
+- Engine: https://github.com/mikroverk/esp32sim, commit `4e49dac2f3d1baee8128e7525443d4d871462973`, MIT. Full license in esp32sim.LICENSE.
+- Local host bridge patch: scripts/firmware/esp32sim-bridge.patch. Build recipe: scripts/firmware/build-wasm.sh. Rust stable 1.99.1, portable interpreter; JIT disabled.
+- Original ESP32 mask ROM ELF: Espressif esp-rom-elfs release 20260528, https://github.com/espressif/esp-rom-elfs/releases/tag/20260528, Apache-2.0. Hash verification is implemented by the engine's tools/fetch-rom-elfs.sh. ROM SHA-256: 920b70635440517866aab2230964a570d2cf2b676658d93c52fbac108c1cca31.
+- Demo firmware: original sketches in examples/*/sketch.ino, compiled with Arduino CLI 1.5.1 and Arduino-ESP32 3.3.10, FQBN esp32:esp32:firebeetle32. These binaries contain Espressif/Arduino framework components under their upstream licenses (Arduino-ESP32 LGPL-2.1; ESP-IDF components have per-component licenses). Build each sketch with that toolchain to reproduce application, partition, and bootloader images; source and third-party framework are available upstream at https://github.com/espressif/arduino-esp32/tree/3.3.10 and https://github.com/espressif/esp-idf.
+- GPIO/ADC coupling: sample/hold every 0.5ms. PWM reports feed the existing circuit model, up to 1kHz; phase is approximate. Short pulses, exact phase, wireless behavior, and physical-device validation are outside this prototype.

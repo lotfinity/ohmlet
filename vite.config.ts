@@ -10,6 +10,7 @@ export default defineConfig({
     proxy: {
       '/mcp': 'http://127.0.0.1:5174',
       '/api/mcp': 'http://127.0.0.1:5174',
+      '/api/firmware': 'http://127.0.0.1:5174',
     },
     allowedHosts: ['acer-gnmd.merino-ayu.ts.net'],
   },

@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "name": "Firmware: button",
+  "description": "Execute the included Arduino sketch. Use the Firmware panel Run and interactive controls.",
+  "components": [
+    {
+      "id": "ESP1",
+      "type": "firebeetle_esp32e"
+    },
+    {
+      "id": "SW1",
+      "type": "pushbutton",
+      "at": "f15"
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "top+2",
+        "a10"
+      ],
+      "params": {
+        "resistance": 10000
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "b10"
+      ],
+      "params": {
+        "channel": 1
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "ESP1:3V3",
+      "to": "top+0",
+      "color": "red"
+    },
+    {
+      "id": "W2",
+      "from": "ESP1:GND",
+      "to": "top-0",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "ESP1:GPIO13",
+      "to": "c10",
+      "color": "green"
+    },
+    {
+      "id": "W4",
+      "from": "d10",
+      "to": "g15",
+      "color": "green"
+    },
+    {
+      "id": "W5",
+      "from": "g17",
+      "to": "top-1",
+      "color": "black"
+    }
+  ]
+}

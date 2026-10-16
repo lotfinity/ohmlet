@@ -1,3 +1,4 @@
+import { FirmwareSheet } from './ui/sheets/FirmwareSheet'
 import { startMcpBridge } from './mcp/bridge'
 /**
  * App shell — phone-first "liquid glass" chrome over the full-bleed 3D canvas
@@ -394,7 +395,7 @@ function duplicateComponent(id: string): void {
 // App
 // ---------------------------------------------------------------------------
 
-type SheetKey = 'parts' | 'ai' | 'scope' | 'more'
+type SheetKey = 'parts' | 'ai' | 'scope' | 'firmware' | 'more'
 type DockKey = SheetKey | 'wire' | 'none'
 
 export default function App() {
@@ -652,6 +653,7 @@ export default function App() {
     { key: 'wire', icon: <WireIcon size={26} />, label: 'Wire' },
     { key: 'ai', icon: <SparklesIcon size={26} />, label: 'AI' },
     { key: 'scope', icon: <WaveformIcon size={26} />, label: 'Scope' },
+    { key: 'firmware', icon: <span style={{fontFamily:'monospace',fontSize:20}}>{'</>'}</span>, label: 'Code' },
     {
       key: 'more',
       icon: (
@@ -776,6 +778,7 @@ export default function App() {
         onDismiss={() => setActiveSheet(null)}
         desktop={isDesktop}
       />
+      <FirmwareSheet open={activeSheet === 'firmware'} onDismiss={() => setActiveSheet(null)} desktop={isDesktop} />
       <MoreSheet
         open={activeSheet === 'more'}
         onDismiss={() => setActiveSheet(null)}

@@ -61,6 +61,10 @@ try {
   await connect()
   const tools = await client.listTools()
   assert.ok(tools.tools.length >= 18)
+  assert.ok(['firmware_compile','firmware_status','firmware_browser_load'].every(name=>tools.tools.some(t=>t.name===name)))
+  const firmwareHealth=await (await fetch(url+'/api/firmware/health')).json()
+  assert.equal(firmwareHealth.engine,'esp32sim')
+  await call('firmware_status',{id:'00000000-0000-4000-8000-000000000000'},true)
   const resources = await client.listResources()
   assert.ok(resources.resources.some((r) => r.uri === 'ohmlet://guide'))
   const templates = await client.listResourceTemplates()
@@ -302,7 +306,7 @@ try {
       arguments: { workspace: 'test' },
     })
     assert.equal(JSON.parse(shared.content[0].text).revision, 3)
-    assert.equal((await local.listTools()).tools.length, 20)
+    assert.equal((await local.listTools()).tools.length, 23)
   } finally {
     await local.close()
   }

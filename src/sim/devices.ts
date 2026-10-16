@@ -765,6 +765,9 @@ class FireBeetleDevice extends BaseDevice {
     for(const gpio of FIREBEETLE_GPIOS) {
       const v=this.output(gpio)
       if(v!==null) ctx.addNorton(this.node(`GPIO${gpio}`),g,v,40)
+      // Firmware-owned IO_MUX pulls; manual mode does not set this runtime key.
+      else if(this.active && this.settings[`gpio${gpio}_pull`]==='up') ctx.addNorton(this.node(`GPIO${gpio}`),g,3.3,45000)
+      else if(this.active && this.settings[`gpio${gpio}_pull`]==='down') ctx.addNorton(this.node(`GPIO${gpio}`),g,0,45000)
     }
   }
   fillTelemetry(t:ComponentTelemetry):void {

@@ -1,3 +1,4 @@
+import { firmwareRuntime } from '../firmware/runtime'
 /**
  * Real application store (glue agent): implements the AppState contract from
  * src/state/types.ts with zustand, and owns the simulation loop.
@@ -649,6 +650,7 @@ function trimScope(now: number, timeWindow: number): void {
 
 /** (Re)build the engine from `layout`, preserving the running clock. */
 function rebuildEngine(layout: CircuitLayout): void {
+  if (firmwareRuntime.active) firmwareRuntime.layout(layout)
   const prevTime = engine?.time ?? 0
   try {
     engine = new SimEngine(layout)
@@ -745,6 +747,7 @@ export const useStore = create<AppState>()((set, get) => {
     set({ layout })
     scheduleAutosave(layout)
     if (engine && rebuild) rebuildEngine(layout)
+    else if(rebuild && firmwareRuntime.active) firmwareRuntime.layout(layout)
   }
 
   /**
@@ -776,6 +779,7 @@ export const useStore = create<AppState>()((set, get) => {
     })
     scheduleAutosave(layout)
     if (engine) rebuildEngine(layout)
+    else if(firmwareRuntime.active) firmwareRuntime.layout(layout)
   }
 
   return {
@@ -980,6 +984,7 @@ export const useStore = create<AppState>()((set, get) => {
       // structural params (resistance, capacitance…) require a rebuild.
       commitLayout({ ...layout, components }, !isRuntime)
       if (isRuntime && engine) engine.setRuntimeParam(componentId, key, value)
+      if (isRuntime && firmwareRuntime.active) firmwareRuntime.param(componentId, key, value)
       if (comp.type === 'scope_probe') refreshProbes(get().layout)
     },
 
@@ -1336,6 +1341,7 @@ export const useStore = create<AppState>()((set, get) => {
 
     startSim() {
       if (get().running) return
+      if (firmwareRuntime.active) { stopLoop(); set({running:true}); firmwareRuntime.start(); return }
       if (!engine) {
         scopeBuf = []
         nextSampleT = 0
@@ -1349,6 +1355,7 @@ export const useStore = create<AppState>()((set, get) => {
     },
 
     stopSim() {
+      if (firmwareRuntime.active) { firmwareRuntime.pause(); set({running:false}); return }
       if (!get().running) return
       stopLoop()
       set({ running: false })
@@ -1356,6 +1363,9 @@ export const useStore = create<AppState>()((set, get) => {
     },
 
     resetSim() {
+      if (firmwareRuntime.active) {
+        firmwareRuntime.reset(); set({running:false,simTime:0,telemetry:null,issues:[],scope:{samples:[],timeWindow:get().scope.timeWindow}}); telemetrySink?.(null); return
+      }
       stopLoop()
       engine = null
       scopeBuf = []
@@ -1373,6 +1383,7 @@ export const useStore = create<AppState>()((set, get) => {
     setSimSpeed(x) {
       if (!Number.isFinite(x) || x <= 0) return
       set({ simSpeed: x })
+      firmwareRuntime.setSpeed(x)
     },
 
     setScopeWindow(seconds) {
@@ -1471,3 +1482,15 @@ export const useStore = create<AppState>()((set, get) => {
     },
   }
 })
+
+// Firmware worker owns both clocks while firmware mode is active.
+firmwareRuntime.onFrame = (telemetry, points) => {
+  if (!firmwareRuntime.active) return
+  const s=useStore.getState()
+  const v:[number,number,number,number]=[NaN,NaN,NaN,NaN]
+  for(const p of points) if(p.channel>=0&&p.channel<4) v[p.channel]=p.v
+  const samples=[...s.scope.samples,{t:telemetry.time,v}].filter(p=>p.t>=telemetry.time-s.scope.timeWindow).slice(-5000)
+  useStore.setState({telemetry,simTime:telemetry.time,issues:telemetry.issues,scope:{samples,timeWindow:s.scope.timeWindow}})
+  telemetrySink?.(telemetry)
+}
+firmwareRuntime.onError = () => useStore.setState({running:false})

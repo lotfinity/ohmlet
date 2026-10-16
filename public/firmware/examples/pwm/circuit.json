@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "name": "Firmware: pwm",
+  "description": "Execute the included Arduino sketch. Use the Firmware panel Run and interactive controls.",
+  "components": [
+    {
+      "id": "ESP1",
+      "type": "firebeetle_esp32e",
+      "params": {
+        "gpio2_mode": "pwm",
+        "gpio2_frequency": 1,
+        "gpio2_duty": 0.5
+      }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "holes": [
+        "j10",
+        "j14"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    },
+    {
+      "id": "LED1",
+      "type": "led",
+      "holes": [
+        "i14",
+        "i18"
+      ],
+      "params": {
+        "color": "red"
+      }
+    },
+    {
+      "id": "P1",
+      "type": "scope_probe",
+      "holes": [
+        "a10"
+      ],
+      "params": {
+        "channel": 1
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "ESP1:GPIO2",
+      "to": "h10",
+      "color": "green"
+    },
+    {
+      "id": "W2",
+      "from": "ESP1:GND",
+      "to": "j18",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "g10",
+      "to": "b10",
+      "color": "yellow"
+    }
+  ]
+}

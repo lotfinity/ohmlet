@@ -1,3 +1,4 @@
+import { firmwareApi, firmwareCompile, firmwareJobs } from './firmware'
 import { createServer } from 'node:http'
 import { Worker } from 'node:worker_threads'
 import { randomUUID } from 'node:crypto'
@@ -27,7 +28,7 @@ import {
 } from './workspaces'
 const ROOT = resolve(process.env.OHMLET_ROOT || process.cwd())
 const INSTRUCTIONS =
-  'Ohmlet virtual electronics workbench. Start with workspaces_list and workspace_read. Browser workspaces are live when browser.connected is true. Fetch catalog_detail for parts you use; do not guess pins or parameters. Apply atomic edits with expectedRevision, then simulate and verify measured behavior. Existing UI AI generation remains available; this server lets the calling AI design, test and repair directly. FireBeetle supports modeled GPIO/PWM/ADC, reset and button, not firmware execution, Wi-Fi or hardware flashing. Simulation is approximate, not a real-world electrical safety certification.'
+  'Ohmlet virtual electronics workbench. Start with workspaces_list and workspace_read. Browser workspaces are live when browser.connected is true. Fetch catalog_detail for parts you use; do not guess pins or parameters. Apply atomic edits with expectedRevision, then simulate and verify measured behavior. Existing UI AI generation remains available; this server lets the calling AI design, test and repair directly. FireBeetle supports modeled GPIO/PWM/ADC, reset and button, plus experimental Arduino firmware execution in the browser Firmware panel (one board, 0.5ms GPIO/ADC coupling, PWM up to 1kHz with approximate phase). Standalone simulation_run remains manual GPIO mode. No simulated Wi-Fi or hardware flashing. Simulation is approximate, not a real-world electrical safety certification.'
 const clients = new Map<string, any>()
 let activeJobs = 0
 function browser(id: string) {
@@ -171,6 +172,15 @@ function makeServer() {
       },
     )
   }
+  tool('firmware_compile', 'Compile Arduino code for the original ESP32 FireBeetle. Returns a job ID; poll firmware_status. Runs code only in the compiler, never flashes physical hardware.', {source:z.string().min(1).max(50000)}, ({source})=>firmwareCompile(source))
+  tool('firmware_browser_load', 'Load a compiled firmware job into a connected workbench browser without changing the circuit. Requires exactly one FireBeetle. Use browser_control run/pause/reset afterwards.', {workspace:ws,id:z.string().uuid()}, ({workspace,id})=>{
+    const job=firmwareJobs.get(id);if(job?.status!=='ready')throw Error('Firmware job is not ready')
+    const c=clients.get(workspace);if(!c||Date.now()-c.seen>=15000)throw Error('Workbench browser is not connected')
+    const layout=get(workspace).layout
+    if(layout.components.filter((x:any)=>x.type==='firebeetle_esp32e').length!==1)throw Error('Exactly one FireBeetle is required')
+    const command={id:randomUUID(),action:'firmware_load',jobId:id,createdAt:Date.now()};c.commands.push(command);return command
+  })
+  tool('firmware_status', 'Read firmware compilation status, compiler log, and image URLs. Browser Firmware panel loads images for co-simulation; GPIO/ADC coupling is sampled at 0.5ms.', {id:z.string().uuid()}, ({id})=>{const job=firmwareJobs.get(id);if(!job)throw Error('Unknown or expired firmware job');return job}, true)
   tool(
     'workspaces_list',
     'List persisted workspaces, revisions, and connected workbench browsers.',
@@ -763,6 +773,7 @@ const http = createServer(async (req, res) => {
     )
       return json(401, { error: 'Bearer token required' })
     const url = new URL(req.url!, 'http://localhost')
+    if (await firmwareApi(req,res,url.pathname,()=>body(req))) return
     if (url.pathname === '/mcp') {
       if (req.method !== 'POST') {
         res.writeHead(405, { Allow: 'POST' })
@@ -787,7 +798,7 @@ const http = createServer(async (req, res) => {
         name: 'ohmlet-workbench',
         version: '1.0.0',
         endpoint: '/mcp',
-        tools: 20,
+        tools: 23,
       })
     if (url.pathname === '/api/mcp/sync' && req.method === 'POST') {
       const a = await body(req)
@@ -810,6 +821,7 @@ const http = createServer(async (req, res) => {
         simTime: typeof a.simTime === 'number' ? a.simTime : 0,
         selection: Array.isArray(a.selection) ? a.selection.slice(0, 150) : [],
         telemetry: a.telemetry || null,
+        firmware: a.firmware || null,
         lastCommand: a.lastCommand,
       }
       if (a.layout && a.expectedRevision === d.revision) {
