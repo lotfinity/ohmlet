@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "name": "Two-digit month display 06 — one 400-point board",
+  "description": "Fits ONE 400-point, 30-row breadboard. Two CD4511 decoders and two common-cathode displays show 06 (June). Each segment has a 330-ohm resistor. The first decoder starts at f1 and its display at f10; the second starts at f16 and its display at f25. This is the single-board version of the full 0611 date display.",
+  "components": [
+    {
+      "id": "PS1",
+      "type": "power_supply",
+      "params": {
+        "voltage": 5
+      }
+    },
+    {
+      "id": "U1",
+      "type": "cd4511",
+      "at": "f1"
+    },
+    {
+      "id": "DS1",
+      "type": "seven_segment",
+      "at": "f10"
+    },
+    {
+      "id": "R1A",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a4",
+        "a13"
+      ]
+    },
+    {
+      "id": "R1B",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a5",
+        "a14"
+      ]
+    },
+    {
+      "id": "R1C",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a6",
+        "g13"
+      ]
+    },
+    {
+      "id": "R1D",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a7",
+        "g11"
+      ]
+    },
+    {
+      "id": "R1E",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a8",
+        "g10"
+      ]
+    },
+    {
+      "id": "R1F",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a2",
+        "a11"
+      ]
+    },
+    {
+      "id": "R1G",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a3",
+        "a10"
+      ]
+    },
+    {
+      "id": "U2",
+      "type": "cd4511",
+      "at": "f16"
+    },
+    {
+      "id": "DS2",
+      "type": "seven_segment",
+      "at": "f25"
+    },
+    {
+      "id": "R2A",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a19",
+        "a28"
+      ]
+    },
+    {
+      "id": "R2B",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a20",
+        "a29"
+      ]
+    },
+    {
+      "id": "R2C",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a21",
+        "g28"
+      ]
+    },
+    {
+      "id": "R2D",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a22",
+        "g26"
+      ]
+    },
+    {
+      "id": "R2E",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a23",
+        "g25"
+      ]
+    },
+    {
+      "id": "R2F",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a17",
+        "a26"
+      ]
+    },
+    {
+      "id": "R2G",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a18",
+        "a25"
+      ]
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "from": "PS1:+",
+      "to": "top+0",
+      "color": "red"
+    },
+    {
+      "id": "w2",
+      "from": "PS1:-",
+      "to": "top-0",
+      "color": "black"
+    },
+    {
+      "id": "w3",
+      "from": "a1",
+      "to": "top+1",
+      "color": "red"
+    },
+    {
+      "id": "w4",
+      "from": "g3",
+      "to": "top+2",
+      "color": "red"
+    },
+    {
+      "id": "w5",
+      "from": "g4",
+      "to": "top+3",
+      "color": "red"
+    },
+    {
+      "id": "w6",
+      "from": "g8",
+      "to": "top-1",
+      "color": "black"
+    },
+    {
+      "id": "w7",
+      "from": "g5",
+      "to": "top-2",
+      "color": "black"
+    },
+    {
+      "id": "w8",
+      "from": "g12",
+      "to": "top-3",
+      "color": "black"
+    },
+    {
+      "id": "w9",
+      "from": "g7",
+      "to": "top-4",
+      "color": "blue"
+    },
+    {
+      "id": "w10",
+      "from": "g1",
+      "to": "top-5",
+      "color": "blue"
+    },
+    {
+      "id": "w11",
+      "from": "g2",
+      "to": "top-6",
+      "color": "blue"
+    },
+    {
+      "id": "w12",
+      "from": "g6",
+      "to": "top-7",
+      "color": "blue"
+    },
+    {
+      "id": "w13",
+      "from": "a16",
+      "to": "top+4",
+      "color": "red"
+    },
+    {
+      "id": "w14",
+      "from": "g18",
+      "to": "top+5",
+      "color": "red"
+    },
+    {
+      "id": "w15",
+      "from": "g19",
+      "to": "top+6",
+      "color": "red"
+    },
+    {
+      "id": "w16",
+      "from": "g23",
+      "to": "top-8",
+      "color": "black"
+    },
+    {
+      "id": "w17",
+      "from": "g20",
+      "to": "top-9",
+      "color": "black"
+    },
+    {
+      "id": "w18",
+      "from": "g27",
+      "to": "top-10",
+      "color": "black"
+    },
+    {
+      "id": "w19",
+      "from": "g22",
+      "to": "top-11",
+      "color": "blue"
+    },
+    {
+      "id": "w20",
+      "from": "g16",
+      "to": "top+7",
+      "color": "orange"
+    },
+    {
+      "id": "w21",
+      "from": "g17",
+      "to": "top+8",
+      "color": "orange"
+    },
+    {
+      "id": "w22",
+      "from": "g21",
+      "to": "top-12",
+      "color": "blue"
+    }
+  ],
+  "board": "half"
+}

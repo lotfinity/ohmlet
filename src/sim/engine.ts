@@ -25,7 +25,7 @@ import type {
   SimIssue,
   SimTelemetry,
 } from '../model/types'
-import { isBoardCount, isBoardSizeId } from '../model/types'
+import { isBoardCount, isBoardRows, isBoardSizeId } from '../model/types'
 import { componentPinHoles, formatHole } from '../model/breadboard'
 import { getEntry } from '../model/catalog'
 import type { CatalogEntry } from '../model/catalog'
@@ -152,6 +152,7 @@ export class SimEngine {
     this.board = {
       size: isBoardSizeId(layout?.board) ? layout.board : 'standard',
       count: isBoardCount(layout?.boardCount) ? layout.boardCount : 1,
+      rows: isBoardRows(layout?.boardRows) ? layout.boardRows : 1,
     }
     this.netlist = buildNetlist(layout)
     for (const w of this.netlist.warnings) this.addIssue('warning', w)

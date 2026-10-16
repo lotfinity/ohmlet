@@ -245,7 +245,7 @@ const enableOverlayLayer = (o: THREE.Object3D): void => {
  */
 const MATERIALS_REFRESH_MS = 250
 
-const EMPTY_LAYOUT: CircuitLayout = { version: 1, components: [], wires: [] }
+const EMPTY_LAYOUT: CircuitLayout = { version: 1, board: 'half', components: [], wires: [] }
 
 // ---------------------------------------------------------------------------
 // Internal record types

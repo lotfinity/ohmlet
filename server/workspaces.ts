@@ -2,6 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync, renameSync } from 'node:fs'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 import { validateLayout } from '../src/model/validate'
+import { DEFAULT_BOARD } from '../src/model/types'
 import type { CircuitLayout } from '../src/model/types'
 export interface Workspace {
   id: string
@@ -147,6 +148,7 @@ if (!documents.has('main'))
   create('main', {
     version: 1,
     name: 'MCP workspace',
+    board: DEFAULT_BOARD,
     components: [],
     wires: [],
   })

@@ -291,7 +291,7 @@ export const CIRCUIT_OUTPUT_SCHEMA: Record<string, unknown> = {
         board: {
           anyOf: [{ type: 'string', enum: Object.keys(BOARD_SIZES) }, { type: 'null' }],
           description:
-            'board size preset the circuit is laid out for ("half" | "standard" | "labxl"); null = the active board. Pick a larger preset only when the circuit needs more columns/rail holes than the active board has.',
+            'board size preset the circuit is laid out for ("half" | "standard" | "labxl"); null = the active board. Use the active physical board; change it only when the user explicitly requests another board.',
         },
         boardCount: {
           anyOf: [{ type: 'integer' }, { type: 'null' }],

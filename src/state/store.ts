@@ -32,6 +32,7 @@ import type {
 import type { BoardConfig } from '../model/types'
 import {
   BOARD_SIZES,
+  DEFAULT_BOARD,
   boardConfigOf,
   boardOf,
   isBoardCount,
@@ -76,7 +77,7 @@ const REACT_PUSH_MS = 100 // ~10 Hz React state updates
 const SCOPE_SAMPLE_DT = 1e-3 // one scope sample per simulated millisecond
 const MAX_FRAME_WALL_DT = 0.25 // clamp huge frame gaps (tab was hidden)
 
-const EMPTY_LAYOUT: CircuitLayout = { version: 1, components: [], wires: [] }
+const EMPTY_LAYOUT: CircuitLayout = { version: 1, board: DEFAULT_BOARD, components: [], wires: [] }
 
 /** Sensible id prefixes per catalog type (fallback: 'U' for ICs, 'X' else). */
 const ID_PREFIX: Record<string, string> = {
@@ -537,7 +538,10 @@ function loadSavedLayout(): CircuitLayout {
     if (!raw) return EMPTY_LAYOUT
     const parsed: unknown = JSON.parse(raw)
     const res = validateLayout(parsed)
-    if (res.ok && res.layout) return res.layout
+    if (res.ok && res.layout) {
+      if (!res.layout.board && !res.layout.components.length && !res.layout.wires.length) return EMPTY_LAYOUT
+      return res.layout
+    }
   } catch {
     /* corrupted save / no storage: start empty */
   }

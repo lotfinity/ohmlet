@@ -11,7 +11,7 @@
 
 import type Anthropic from '@anthropic-ai/sdk'
 import type { BoardConfig, BoardSizeId, CircuitLayout } from '../model/types'
-import { asBoardConfig } from '../model/types'
+import { asBoardConfig, DEFAULT_BOARD } from '../model/types'
 import { validateLayout } from '../model/validate'
 import { CLAUDE_MODEL, createClient, friendlyApiError } from './client'
 import { buildSystemPrompt } from './prompt'
@@ -164,7 +164,7 @@ function interpretMessage(message: Anthropic.Message, activeBoard: BoardConfig):
 export async function generateCircuit(
   opts: GenerateCircuitOptions,
 ): Promise<GenerateCircuitResult> {
-  const { apiKey, prompt, boardConfig = 'standard', onStatus, signal } = opts
+  const { apiKey, prompt, boardConfig = DEFAULT_BOARD, onStatus, signal } = opts
   const activeConfig = asBoardConfig(boardConfig)
   if (!apiKey || apiKey.trim().length === 0) {
     throw new Error('No API key set — add your Anthropic API key first.')

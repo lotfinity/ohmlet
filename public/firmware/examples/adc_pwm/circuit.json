@@ -34,8 +34,8 @@
       "id": "R2",
       "type": "resistor",
       "holes": [
-        "j30",
-        "j34"
+        "j14",
+        "j18"
       ],
       "params": {
         "resistance": 330
@@ -45,8 +45,8 @@
       "id": "LED1",
       "type": "led",
       "holes": [
-        "i34",
-        "i38"
+        "i18",
+        "i22"
       ],
       "params": {
         "color": "red"
@@ -75,14 +75,15 @@
     {
       "id": "W4",
       "from": "ESP1:GPIO2",
-      "to": "h30",
+      "to": "h14",
       "color": "green"
     },
     {
       "id": "W5",
       "from": "ESP1:GND",
-      "to": "j38",
+      "to": "j22",
       "color": "black"
     }
-  ]
+  ],
+  "board": "half"
 }

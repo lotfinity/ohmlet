@@ -1,3 +1,4 @@
+import { DEFAULT_BOARD } from '../src/model/types'
 import { firmwareApi, firmwareCompile, firmwareJobs } from './firmware'
 import { createServer } from 'node:http'
 import { Worker } from 'node:worker_threads'
@@ -209,7 +210,7 @@ function makeServer() {
     'Create a named isolated workspace; optional validated initial circuit.',
     { workspace: z.string(), layout: anyLayout.optional() },
     (a) => {
-      create(a.workspace, a.layout || { version: 1, components: [], wires: [] })
+      create(a.workspace, a.layout || { version: 1, board: DEFAULT_BOARD, components: [], wires: [] })
       return view(a.workspace)
     },
   )

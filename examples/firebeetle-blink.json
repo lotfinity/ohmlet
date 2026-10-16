@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "FireBeetle GPIO2 LED blink",
   "description": "USB-powered FireBeetle. Run simulation, select ESP1 and use GPIO controls to switch GPIO2 LOW/HIGH/PWM. GPIO2 drives the onboard LED and a red LED through 330 ohms.",
   "components": [

@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "Firmware: button",
   "description": "Execute the included Arduino sketch. Use the Firmware panel Run and interactive controls.",
   "components": [

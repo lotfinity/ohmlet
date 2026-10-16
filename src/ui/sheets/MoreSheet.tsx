@@ -50,6 +50,7 @@ import { ApiKeyRow } from './ApiKeyRow'
 import rgbController from '../../../examples/als001-rgb-controller.json'
 import blinky555 from '../../../examples/blinky-555.json'
 import dateDisplay from '../../../examples/date-display.json'
+import monthDisplay from '../../../examples/month-display.json'
 import counter from '../../../examples/counter.json'
 import nightLight from '../../../examples/night-light.json'
 import firebeetleBlink from '../../../examples/firebeetle-blink.json'
@@ -73,7 +74,7 @@ const SPEED_OPTIONS: readonly SegmentedOption<string>[] = [
 ]
 
 const BOARD_OPTIONS: readonly SegmentedOption<BoardSizeId>[] = [
-  { value: 'half', label: BOARD_SIZES.half.label },
+  { value: 'half', label: '400-point' },
   { value: 'standard', label: BOARD_SIZES.standard.label },
   { value: 'labxl', label: BOARD_SIZES.labxl.label },
 ]
@@ -135,7 +136,8 @@ const EXAMPLES: readonly ExampleEntry[] = [
   { title: 'AC-to-DC rectifier + smoothing', layout: acDcSmoothing as unknown as CircuitLayout },
   { title: 'FireBeetle ESP32 LED blink', layout: firebeetleBlink as unknown as CircuitLayout },
   { title: '555 LED blinker', layout: blinky555 as unknown as CircuitLayout },
-  { title: 'Date display', layout: dateDisplay as unknown as CircuitLayout },
+  { title: 'Month display · one board', layout: monthDisplay as unknown as CircuitLayout },
+  { title: 'Full date · needs 2 boards', layout: dateDisplay as unknown as CircuitLayout },
   { title: '0–9 counter', layout: counter as unknown as CircuitLayout },
   { title: 'Night light', layout: nightLight as unknown as CircuitLayout },
 ]
@@ -274,7 +276,7 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
               />
             </ListGroup>
 
-            <ListGroup header="Board">
+            <ListGroup header="Board" footer="Default: your 400-point board, numbered 1–30 with letters a–j. Existing saved circuits keep their original size.">
               <div className="lg-row asm-row-stack" role="listitem">
                 <span className="asm-row-stack-label">Size</span>
                 <Segmented<BoardSizeId>
@@ -376,7 +378,9 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
 
             {layoutDescription && <ListGroup header="Current lesson"><ListRow title={layoutName ?? "Circuit"} subtitle={layoutDescription} /></ListGroup>}
 
-            <ListGroup header="Examples" footer="Loading an example replaces the current circuit.">
+            <ListGroup header="Copying to your breadboard"><ListRow title="Match the letters and numbers" subtitle="a12 means letter a, number 12 on your board. The five holes a–e at each number are connected; f–j are a separate group across the centre gap. Rail holes are numbered from 0 in the app: top+0 means the first hole of that positive rail. Follow +/− markings, not just wire colours. Rotate the view to match how your board is lying." /></ListGroup>
+
+            <ListGroup header="Examples" footer="Examples fit your 30-row board. The full four-digit date lesson is marked as needing two boards. Loading replaces the current circuit and can be undone.">
               {EXAMPLES.map((ex) => (
                 <ListRow
                   key={ex.title}

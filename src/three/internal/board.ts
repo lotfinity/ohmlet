@@ -350,8 +350,9 @@ function paintColor(ctx: CanvasRenderingContext2D, d: DecalCtx): void {
   // --- printed legend (column numbers continue across module seams) --------
   ctx.fillStyle = INK
   ctx.font = `600 ${Math.round(0.56 * px)}px system-ui, "Segoe UI", sans-serif`
-  const colLabels: number[] = [1]
-  for (let c = 5; c <= totalCols; c += 5) colLabels.push(c)
+  const colLabels: number[] = size === 'half'
+    ? Array.from({ length: totalCols }, (_, i) => i + 1)
+    : [1, ...Array.from({ length: Math.floor(totalCols / 5) }, (_, i) => (i + 1) * 5)]
   for (const col of colLabels) {
     if (col < d.minX - 1 || col > sliceMax + 1) continue
     ctx.fillText(String(col), X(col), Y(2.1))

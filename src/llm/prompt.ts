@@ -11,6 +11,7 @@ import { leadsBodyOverhang, occludedOffsetsForEntry } from '../model/occlusion'
 import {
   asBoardConfig,
   BOARD_SIZES,
+  DEFAULT_BOARD,
   BoardConfig,
   BoardSizeId,
   boardConfigOf,
@@ -167,12 +168,11 @@ must sit entirely on ONE board-row (the rows are physically far apart); wires
 and leaded parts may span board-rows freely.
 
 Design for the ACTIVE rig: set "board": "${sizeId}", "boardCount": ${count} and
-"boardRows": ${rows} in your output. If the request genuinely needs more room
-than the active rig offers (e.g. many display digits or several DIP
-packages), you may instead set "board" to a LARGER preset, "boardCount" to a
-larger count (1..${MAX_BOARD_COUNT}) and/or "boardRows" to a larger depth (1..${MAX_BOARD_ROWS}), and lay
-the circuit out for that grid's ranges. Never reference holes beyond the
-columns/rail indices — or board-rows — of the grid you set.
+"boardRows": ${rows} in your output. The user owns the active physical board.
+Do NOT silently enlarge it or add boards. Simplify the circuit to fit, or
+explain the additional hardware required and ask before changing the rig.
+The default is one 400-point breadboard: 30 numbered rows and a–j letters.
+Never reference holes beyond the active grid's ranges.
 
 - Terminal strips: columns 1..${totalCols} × rows a..j. Rows a–e are the TOP block,
   rows f–j the BOTTOM block, with the center channel between rows e and f.
@@ -254,14 +254,11 @@ Respond with a single JSON object matching the provided schema:
 - explanation: 2–6 friendly sentences on how the circuit works and how to
   interact with it (which knobs/buttons to use while simulating).
 - board: the board size preset the circuit is laid out for ("half" |
-  "standard" | "labxl") — normally the active board; a larger preset only when
-  the circuit needs the extra room.
+  "standard" | "labxl") — the active board; change it only when the user explicitly requests another physical board.
 - boardCount: how many board modules the circuit is laid out for (1..${MAX_BOARD_COUNT}) —
-  normally the active count; a larger count only when the circuit needs the
-  extra width (remember: packages may not straddle module seams).
+  the active count; change it only when the user explicitly requests additional boards (remember: packages may not straddle module seams).
 - boardRows: how many board-rows deep the circuit is laid out (1..${MAX_BOARD_ROWS}) —
-  normally the active depth; a larger value only when the circuit needs the
-  extra depth (remember: each board-row's rails are independent — jumper
+  the active depth; change it only when the user explicitly requests additional boards (remember: each board-row's rails are independent — jumper
   power to every row you use; packages sit on one board-row).
 - Each component: { "id", "type", "at", "holes", "params", "rotation" }. Use
   "at" only for dip/footprint placements (null otherwise); use "holes" only
@@ -348,7 +345,7 @@ function catalogSection(): string {
  * BoardConfig. Deterministic per (catalog, size, count) — byte-identical for
  * repeated calls with the same active rig, so prompt caching keeps working.
  */
-export function buildSystemPrompt(board: BoardSizeId | BoardConfig = 'standard'): string {
+export function buildSystemPrompt(board: BoardSizeId | BoardConfig = DEFAULT_BOARD): string {
   return [
     'You are the expert circuit designer inside ohmlet, a 3D breadboard ' +
       'circuit simulator. The user describes a circuit in plain language; you design ' +

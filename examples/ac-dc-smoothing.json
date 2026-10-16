@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "AC \u2192 diode \u2192 smoothing capacitor",
   "description": "Low-voltage half-wave rectifier: a 50Hz sine wave (6V nominal peak, not RMS) passes through a diode; a 100uF capacitor smooths the output into DC across a 1k load. Scope channel 1 shows loaded AC and channel 2 shows DC with ripple. The generator has 50 ohms output resistance, so capacitor-charging current reduces the positive input peak. Run, then change C1 capacitance or R1 resistance and compare ripple. This illustrates rectification/filtering from our LED-driver discussion; it does not model a 220V bulb driver, transformer or regulated 5V supply.",
   "components": [

@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "FireBeetle: button input with a pull-up",
   "description": "Read a real external button on GPIO13/D7. A 10k resistor pulls the input up to 3.3V; pressing SW1 connects it to ground. Run, select ESP1, choose GPIO13 and watch HIGH become LOW while holding SW1. This demonstrates input wiring; no firmware automatically drives an LED.",
   "components": [

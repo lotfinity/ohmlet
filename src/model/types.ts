@@ -12,6 +12,9 @@ export const RAILS: RailId[] = ['top+', 'top-', 'bot+', 'bot-']
 /** Board size presets. */
 export type BoardSizeId = 'half' | 'standard' | 'labxl'
 
+/** User's 400-point board: 30 numbered rows, a–j, 25 holes per rail. */
+export const DEFAULT_BOARD: BoardSizeId = 'half'
+
 /**
  * The board presets: terminal-strip column count, holes per power rail, a
  * human label, and the marketing "point" count (which equals the total hole

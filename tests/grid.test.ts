@@ -550,7 +550,7 @@ describe('validateLayout board-row awareness', () => {
 // -------------------------------------------------------------- back-compat
 
 describe('board-row back-compat', () => {
-  it('every curated example still validates unchanged (no boardRows field)', () => {
+  it('curated examples validate on their declared physical boards', () => {
     for (const [name, raw] of [
       ['blinky-555', blinkyRaw],
       ['counter', counterRaw],
@@ -560,7 +560,7 @@ describe('board-row back-compat', () => {
       const res = validateLayout(raw)
       expect(res.errors, `${name}: ${JSON.stringify(res.errors)}`).toEqual([])
       expect(res.ok).toBe(true)
-      expect(res.layout?.boardRows).toBeUndefined()
+      expect(res.layout?.boardRows ?? 1).toBe(name === 'date-display' ? 2 : 1)
     }
   })
 

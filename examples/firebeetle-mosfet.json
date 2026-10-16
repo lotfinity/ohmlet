@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "FireBeetle: MOSFET LED switching",
   "description": "Use GPIO16/D11 to switch a separate 5V LED circuit through an N-MOSFET. GPIO feeds its gate through 100 ohms; a 100k gate-to-ground resistor keeps it off if GPIO floats. Run, select ESP1 \u2192 GPIO16 and change HIGH/LOW/PWM. Grounds are joined. This uses a small LED load and simplified 2N7000 model; it is not a high-power strip driver.",
   "components": [

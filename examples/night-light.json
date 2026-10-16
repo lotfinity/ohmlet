@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "Automatic night light",
   "description": "A photoresistor (LDR) and a 10k resistor form a voltage divider that rises in the dark (R1 from +5V to the sense node, LDR from the node to ground). An LM358 comparator compares the sense node (IN1+) against a threshold set by a 10k potentiometer (IN1-, mid position = 2.5V): when it gets dark the op-amp output goes high and lights the LED through a 330R resistor. Drag the LDR light slider down while simulating to watch the night light switch on; turn the pot to adjust the trip point.",
   "components": [

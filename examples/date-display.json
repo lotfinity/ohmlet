@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "name": "Hardware date display — \"0611\" (June 11)",
-  "description": "A hardware-only date display: four CD4511 BCD-to-7-segment decoders drive four common-cathode 7-segment displays through 330R segment resistors, spelling \"0611\" (June 11, MMDD). Each decoder's BCD inputs A-D are hardwired to the +5V/ground rails in the digit's BCD pattern (0=0000, 6=0110, 1=0001), LT and BL are tied high (inactive) and LE low (transparent), so the date appears with no microcontroller at all. All four digits fit on one 63-column breadboard.",
+  "name": "Hardware date display 0611 — requires 2 × 400-point boards",
+  "description": "Requires TWO 400-point, 30-row breadboards. Board 1 shows 06; board 2 shows 11. References beginning 1: belong to board 2, whose rows restart at 1. Connect the red and black power jumpers between the two boards as shown; their rails are independent. Four CD4511 decoders drive four displays through 330-ohm resistors. For your single board, choose the two-digit month display instead.",
   "components": [
     {
       "id": "PS1",
@@ -100,15 +100,26 @@
     {
       "id": "U2",
       "type": "cd4511",
-      "at": "f17"
+      "at": "f16"
     },
     {
       "id": "DS2",
       "type": "seven_segment",
-      "at": "f26"
+      "at": "f25"
     },
     {
       "id": "R2A",
+      "type": "resistor",
+      "params": {
+        "resistance": 330
+      },
+      "holes": [
+        "a19",
+        "a28"
+      ]
+    },
+    {
+      "id": "R2B",
       "type": "resistor",
       "params": {
         "resistance": 330
@@ -119,25 +130,14 @@
       ]
     },
     {
-      "id": "R2B",
-      "type": "resistor",
-      "params": {
-        "resistance": 330
-      },
-      "holes": [
-        "a21",
-        "a30"
-      ]
-    },
-    {
       "id": "R2C",
       "type": "resistor",
       "params": {
         "resistance": 330
       },
       "holes": [
-        "a22",
-        "g29"
+        "a21",
+        "g28"
       ]
     },
     {
@@ -147,8 +147,8 @@
         "resistance": 330
       },
       "holes": [
-        "a23",
-        "g27"
+        "a22",
+        "g26"
       ]
     },
     {
@@ -158,8 +158,8 @@
         "resistance": 330
       },
       "holes": [
-        "a24",
-        "g26"
+        "a23",
+        "g25"
       ]
     },
     {
@@ -169,8 +169,8 @@
         "resistance": 330
       },
       "holes": [
-        "a18",
-        "a27"
+        "a17",
+        "a26"
       ]
     },
     {
@@ -180,19 +180,19 @@
         "resistance": 330
       },
       "holes": [
-        "a19",
-        "a26"
+        "a18",
+        "a25"
       ]
     },
     {
       "id": "U3",
       "type": "cd4511",
-      "at": "f33"
+      "at": "1:f1"
     },
     {
       "id": "DS3",
       "type": "seven_segment",
-      "at": "f42"
+      "at": "1:f10"
     },
     {
       "id": "R3A",
@@ -201,8 +201,8 @@
         "resistance": 330
       },
       "holes": [
-        "a36",
-        "a45"
+        "1:a4",
+        "1:a13"
       ]
     },
     {
@@ -212,8 +212,8 @@
         "resistance": 330
       },
       "holes": [
-        "a37",
-        "a46"
+        "1:a5",
+        "1:a14"
       ]
     },
     {
@@ -223,8 +223,8 @@
         "resistance": 330
       },
       "holes": [
-        "a38",
-        "g45"
+        "1:a6",
+        "1:g13"
       ]
     },
     {
@@ -234,8 +234,8 @@
         "resistance": 330
       },
       "holes": [
-        "a39",
-        "g43"
+        "1:a7",
+        "1:g11"
       ]
     },
     {
@@ -245,8 +245,8 @@
         "resistance": 330
       },
       "holes": [
-        "a40",
-        "g42"
+        "1:a8",
+        "1:g10"
       ]
     },
     {
@@ -256,8 +256,8 @@
         "resistance": 330
       },
       "holes": [
-        "a34",
-        "a43"
+        "1:a2",
+        "1:a11"
       ]
     },
     {
@@ -267,19 +267,19 @@
         "resistance": 330
       },
       "holes": [
-        "a35",
-        "a42"
+        "1:a3",
+        "1:a10"
       ]
     },
     {
       "id": "U4",
       "type": "cd4511",
-      "at": "f49"
+      "at": "1:f16"
     },
     {
       "id": "DS4",
       "type": "seven_segment",
-      "at": "f58"
+      "at": "1:f25"
     },
     {
       "id": "R4A",
@@ -288,8 +288,8 @@
         "resistance": 330
       },
       "holes": [
-        "a52",
-        "a61"
+        "1:a19",
+        "1:a28"
       ]
     },
     {
@@ -299,8 +299,8 @@
         "resistance": 330
       },
       "holes": [
-        "a53",
-        "a62"
+        "1:a20",
+        "1:a29"
       ]
     },
     {
@@ -310,8 +310,8 @@
         "resistance": 330
       },
       "holes": [
-        "a54",
-        "g61"
+        "1:a21",
+        "1:g28"
       ]
     },
     {
@@ -321,8 +321,8 @@
         "resistance": 330
       },
       "holes": [
-        "a55",
-        "g59"
+        "1:a22",
+        "1:g26"
       ]
     },
     {
@@ -332,8 +332,8 @@
         "resistance": 330
       },
       "holes": [
-        "a56",
-        "g58"
+        "1:a23",
+        "1:g25"
       ]
     },
     {
@@ -343,8 +343,8 @@
         "resistance": 330
       },
       "holes": [
-        "a50",
-        "a59"
+        "1:a17",
+        "1:a26"
       ]
     },
     {
@@ -354,8 +354,8 @@
         "resistance": 330
       },
       "holes": [
-        "a51",
-        "a58"
+        "1:a18",
+        "1:a25"
       ]
     }
   ],
@@ -434,183 +434,197 @@
     },
     {
       "id": "w13",
-      "from": "a17",
+      "from": "a16",
       "to": "top+4",
       "color": "red"
     },
     {
       "id": "w14",
-      "from": "g19",
+      "from": "g18",
       "to": "top+5",
       "color": "red"
     },
     {
       "id": "w15",
-      "from": "g20",
+      "from": "g19",
       "to": "top+6",
       "color": "red"
     },
     {
       "id": "w16",
-      "from": "g24",
+      "from": "g23",
       "to": "top-8",
       "color": "black"
     },
     {
       "id": "w17",
-      "from": "g21",
+      "from": "g20",
       "to": "top-9",
       "color": "black"
     },
     {
       "id": "w18",
-      "from": "g28",
+      "from": "g27",
       "to": "top-10",
       "color": "black"
     },
     {
       "id": "w19",
-      "from": "g23",
+      "from": "g22",
       "to": "top-11",
       "color": "blue"
     },
     {
       "id": "w20",
-      "from": "g17",
+      "from": "g16",
       "to": "top+7",
       "color": "orange"
     },
     {
       "id": "w21",
-      "from": "g18",
+      "from": "g17",
       "to": "top+8",
       "color": "orange"
     },
     {
       "id": "w22",
-      "from": "g22",
+      "from": "g21",
       "to": "top-12",
       "color": "blue"
     },
     {
       "id": "w23",
-      "from": "a33",
-      "to": "top+9",
+      "from": "1:a1",
+      "to": "1:top+9",
       "color": "red"
     },
     {
       "id": "w24",
-      "from": "g35",
-      "to": "top+10",
+      "from": "1:g3",
+      "to": "1:top+10",
       "color": "red"
     },
     {
       "id": "w25",
-      "from": "g36",
-      "to": "top+11",
+      "from": "1:g4",
+      "to": "1:top+11",
       "color": "red"
     },
     {
       "id": "w26",
-      "from": "g40",
-      "to": "top-13",
+      "from": "1:g8",
+      "to": "1:top-13",
       "color": "black"
     },
     {
       "id": "w27",
-      "from": "g37",
-      "to": "top-14",
+      "from": "1:g5",
+      "to": "1:top-14",
       "color": "black"
     },
     {
       "id": "w28",
-      "from": "g44",
-      "to": "top-15",
+      "from": "1:g12",
+      "to": "1:top-15",
       "color": "black"
     },
     {
       "id": "w29",
-      "from": "g39",
-      "to": "top+12",
+      "from": "1:g7",
+      "to": "1:top+12",
       "color": "orange"
     },
     {
       "id": "w30",
-      "from": "g33",
-      "to": "top-16",
+      "from": "1:g1",
+      "to": "1:top-16",
       "color": "blue"
     },
     {
       "id": "w31",
-      "from": "g34",
-      "to": "top-17",
+      "from": "1:g2",
+      "to": "1:top-17",
       "color": "blue"
     },
     {
       "id": "w32",
-      "from": "g38",
-      "to": "top-18",
+      "from": "1:g6",
+      "to": "1:top-18",
       "color": "blue"
     },
     {
       "id": "w33",
-      "from": "a49",
-      "to": "top+13",
+      "from": "1:a16",
+      "to": "1:top+13",
       "color": "red"
     },
     {
       "id": "w34",
-      "from": "g51",
-      "to": "top+14",
+      "from": "1:g18",
+      "to": "1:top+14",
       "color": "red"
     },
     {
       "id": "w35",
-      "from": "g52",
-      "to": "top+15",
+      "from": "1:g19",
+      "to": "1:top+15",
       "color": "red"
     },
     {
       "id": "w36",
-      "from": "g56",
-      "to": "top-19",
+      "from": "1:g23",
+      "to": "1:top-19",
       "color": "black"
     },
     {
       "id": "w37",
-      "from": "g53",
-      "to": "top-20",
+      "from": "1:g20",
+      "to": "1:top-20",
       "color": "black"
     },
     {
       "id": "w38",
-      "from": "g60",
-      "to": "top-21",
+      "from": "1:g27",
+      "to": "1:top-21",
       "color": "black"
     },
     {
       "id": "w39",
-      "from": "g55",
-      "to": "top+16",
+      "from": "1:g22",
+      "to": "1:top+16",
       "color": "orange"
     },
     {
       "id": "w40",
-      "from": "g49",
-      "to": "top-22",
+      "from": "1:g16",
+      "to": "1:top-22",
       "color": "blue"
     },
     {
       "id": "w41",
-      "from": "g50",
-      "to": "top-23",
+      "from": "1:g17",
+      "to": "1:top-23",
       "color": "blue"
     },
     {
       "id": "w42",
-      "from": "g54",
-      "to": "top-24",
+      "from": "1:g21",
+      "to": "1:top-24",
       "color": "blue"
+    },
+    {
+      "id": "power_board2_positive",
+      "from": "top+24",
+      "to": "1:top+0",
+      "color": "red"
+    },
+    {
+      "id": "power_board2_ground",
+      "from": "top-24",
+      "to": "1:top-0",
+      "color": "black"
     }
-  ]
+  ],
+  "board": "half",
+  "boardRows": 2
 }

@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "ALS-001 RGB controller",
   "description": "Photo-derived 12V controller. Three LED + 1k loads represent strip channels. Select CTRL1: change virtual remote preset, brightness or custom RGB levels while running. PWM/effects approximate; IR and receiver supply unmodeled.",
   "components": [

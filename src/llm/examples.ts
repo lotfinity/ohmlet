@@ -17,6 +17,7 @@ import type { CircuitLayout } from '../model/types'
  */
 const BUTTON_LED: CircuitLayout = {
   version: 1,
+  board: 'half',
   name: 'Button LED',
   description:
     'A 5V supply feeds the bottom power rails. Pressing the tactile button connects its A side (column 10) to its B side (column 12), letting current flow through the 470Ω series resistor and the red LED to ground. The resistor limits the LED current to a safe ~7mA.',
@@ -49,6 +50,7 @@ const BUTTON_LED: CircuitLayout = {
  */
 const BLINKER_555: CircuitLayout = {
   version: 1,
+  board: 'half',
   name: '555 LED blinker (~1 Hz)',
   description:
     'A classic NE555 astable oscillator. R_A (10kΩ) and R_B (68kΩ) charge the 10µF capacitor toward VCC; the 555 discharges it through DISCH, producing a square wave at OUT of about 1Hz (f ≈ 1.44/((R_A+2R_B)·C)). OUT drives the red LED through a 330Ω series resistor. RESET is tied to VCC so the timer free-runs.',

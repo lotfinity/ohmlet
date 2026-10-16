@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "board": "half",
   "name": "FireBeetle: potentiometer and ADC",
   "description": "A 10k potentiometer divides the FireBeetle 3.3V rail. Run, select RV1 and move Position from 0 to 100%; select ESP1 and choose GPIO34/A2 to read the voltage and ideal 12-bit ADC value (0\u20134095). Position 50% gives about 1.65V / 2048. Scope channel 1 follows the wiper.",
   "components": [

@@ -292,10 +292,10 @@ describe('validateLayout board awareness', () => {
     expect(res.errors.join('\n')).toContain('rail holes 0..24')
   })
 
-  it('FEW_SHOT_EXAMPLES (no board field) still validate with zero errors', () => {
+  it('FEW_SHOT_EXAMPLES explicitly use the 400-point board and validate with zero errors', () => {
     expect(FEW_SHOT_EXAMPLES.length).toBeGreaterThanOrEqual(1)
     for (const ex of FEW_SHOT_EXAMPLES) {
-      expect(ex.board).toBeUndefined()
+      expect(ex.board).toBe('half')
       const res = validateLayout(ex)
       expect(res.errors, `${ex.name}: ${JSON.stringify(res.errors)}`).toEqual([])
       expect(res.ok).toBe(true)
@@ -392,7 +392,7 @@ describe('LLM board plumbing', () => {
     for (const size of ALL_SIZES) {
       expect(buildSystemPrompt(size)).toBe(buildSystemPrompt(size))
     }
-    expect(buildSystemPrompt()).toBe(buildSystemPrompt('standard'))
+    expect(buildSystemPrompt()).toBe(buildSystemPrompt('half'))
     expect(buildSystemPrompt('half')).not.toBe(buildSystemPrompt('labxl'))
   })
 
@@ -405,12 +405,12 @@ describe('LLM board plumbing', () => {
     expect(p).toContain('"labxl" — Lab XL (1660 points): columns 1..126, rail holes 0..99')
     // and tells the model it may pick a larger board via the "board" field
     expect(p).toContain('"board"')
-    expect(p.toLowerCase()).toContain('larger')
+    expect(p).toContain('Do NOT silently enlarge it or add boards')
   })
 
   it('worked examples in the prompt carry an explicit board', () => {
     const p = buildSystemPrompt('half')
-    expect(p).toContain('"board": "standard"')
+    expect(p).toContain('"board": "half"')
   })
 
   it('the output schema requires a board enum on the circuit', () => {
