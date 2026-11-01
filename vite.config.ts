@@ -11,6 +11,7 @@ export default defineConfig({
       '/mcp': 'http://127.0.0.1:5174',
       '/api/mcp': 'http://127.0.0.1:5174',
       '/api/firmware': 'http://127.0.0.1:5174',
+      '/api/workspaces': 'http://127.0.0.1:5180',
     },
     allowedHosts: ['acer-gnmd.merino-ayu.ts.net'],
   },

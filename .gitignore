@@ -10,3 +10,6 @@ server/dist/
 
 .firmware-tools/
 .firmware-cache/
+
+# Derived public workspace validation bundle
+scripts/workspace-validator.mjs

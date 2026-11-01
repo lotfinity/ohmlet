@@ -50,6 +50,8 @@ import { PartsSheet } from './ui/sheets/PartsSheet'
 import { AiSheet } from './ui/sheets/AiSheet'
 import { ScopeSheet } from './ui/sheets/ScopeSheet'
 import { MoreSheet } from './ui/sheets/MoreSheet'
+import { WorkspacesSheet } from './ui/sheets/WorkspacesSheet'
+import { useWorkspaces } from './workspaces/useWorkspaces'
 import { PropertiesSheet } from './ui/sheets/PropertiesSheet'
 import './app.css'
 
@@ -395,11 +397,17 @@ function duplicateComponent(id: string): void {
 // App
 // ---------------------------------------------------------------------------
 
-type SheetKey = 'parts' | 'ai' | 'scope' | 'firmware' | 'more'
+type SheetKey = 'parts' | 'ai' | 'scope' | 'firmware' | 'more' | 'workspaces'
 type DockKey = SheetKey | 'wire' | 'none'
 
 export default function App() {
-  useEffect(() => startMcpBridge(), [])
+  useEffect(() => {
+    // Public Cloudflare edition exposes only capability-keyed project storage.
+    // Do not poll the private MCP bridge from an anonymous public browser.
+    if (window.location.hostname === 'byd.whatsynaptic.com') return
+    return startMcpBridge()
+  }, [])
+  const workspaces = useWorkspaces()
   const containerRef = useRef<HTMLDivElement | null>(null)
   const isDesktop = useIsDesktop()
 
@@ -723,6 +731,10 @@ export default function App() {
       {/* full-bleed 3D canvas under everything */}
       <div className="app-canvas" ref={containerRef} />
 
+      <button type="button" className="app-workspace-trigger" aria-label="Open workspaces" onClick={() => setActiveSheet('workspaces')}>
+        ▣ {workspaces.current?.name ?? 'Workspaces'}
+      </button>
+
       {/* top-center run capsule */}
       <StatusBar />
 
@@ -783,7 +795,9 @@ export default function App() {
         open={activeSheet === 'more'}
         onDismiss={() => setActiveSheet(null)}
         desktop={isDesktop}
+        onOpenWorkspaces={() => setActiveSheet('workspaces')}
       />
+      <WorkspacesSheet open={activeSheet === 'workspaces'} onDismiss={() => setActiveSheet(null)} desktop={isDesktop} manager={workspaces} />
 
       {/* selection → Properties presents at half snap (single = full editor,
           multi = compact group view); dismiss deselects */}

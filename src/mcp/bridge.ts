@@ -4,7 +4,10 @@ import { useStore } from '../state/store'
 export function startMcpBridge() {
   let id = localStorage.getItem('bb.mcpWorkspace')
   if (!id) {
-    id = 'browser-' + crypto.randomUUID()
+    // randomUUID is unavailable on non-secure HTTP origins (including Tailscale IPs).
+    const uuid = globalThis.crypto?.randomUUID?.() ??
+      `fallback-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+    id = 'browser-' + uuid
     localStorage.setItem('bb.mcpWorkspace', id)
   }
   let revision: number | undefined,

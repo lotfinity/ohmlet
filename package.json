@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run mcp:build",
+    "build": "vite build && npm run mcp:build && npm run workspaces:build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit && tsc -p server/tsconfig.json",
     "test": "vitest run",
     "mcp:build": "node server/build.mjs",
+    "workspaces:build": "esbuild src/model/validate.ts --bundle --platform=node --format=esm --outfile=scripts/workspace-validator.mjs",
     "mcp:start": "node server/dist/index.js",
     "mcp:typecheck": "tsc -p server/tsconfig.json",
     "mcp:test": "npm run mcp:build && node tests/mcp.integration.mjs",

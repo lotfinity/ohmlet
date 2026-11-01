@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "name": "ESP32 PWM \u00b7 six MOSFETs \u00b7 RGB demonstration",
+  "description": "Three PWM-driven low-side RGB LED channels (5V, 330 ohm each), plus three isolated MOSFETs to illustrate six-switch ESC topology. Not a functional three-phase ESC: proper high-side drivers, dead-time, bootstrap and protection required. Virtual circuit only.",
+  "board": "half",
+  "components": [
+    {
+      "id": "ESP",
+      "type": "firebeetle_esp32e",
+      "pos": {
+        "x": -26,
+        "z": -3
+      },
+      "params": {
+        "gpio25_mode": "pwm",
+        "gpio25_frequency": 100,
+        "gpio25_duty": 0.8,
+        "gpio26_mode": "pwm",
+        "gpio26_frequency": 100,
+        "gpio26_duty": 0.5,
+        "gpio14_mode": "pwm",
+        "gpio14_frequency": 100,
+        "gpio14_duty": 0.25,
+        "gpio13_mode": "pwm",
+        "gpio13_frequency": 100,
+        "gpio13_duty": 0.5,
+        "gpio12_mode": "pwm",
+        "gpio12_frequency": 100,
+        "gpio12_duty": 0.75,
+        "gpio15_mode": "pwm",
+        "gpio15_frequency": 100,
+        "gpio15_duty": 0.75
+      }
+    },
+    {
+      "id": "PS",
+      "type": "power_supply",
+      "pos": {
+        "x": -13,
+        "z": 28
+      },
+      "params": {
+        "voltage": 5
+      }
+    },
+    {
+      "id": "Q1",
+      "type": "nmos",
+      "holes": [
+        "f3",
+        "g4",
+        "f5"
+      ]
+    },
+    {
+      "id": "Q2",
+      "type": "nmos",
+      "holes": [
+        "f8",
+        "g9",
+        "f10"
+      ]
+    },
+    {
+      "id": "Q3",
+      "type": "nmos",
+      "holes": [
+        "f13",
+        "g14",
+        "f15"
+      ]
+    },
+    {
+      "id": "Q4",
+      "type": "nmos",
+      "holes": [
+        "f19",
+        "g20",
+        "f21"
+      ]
+    },
+    {
+      "id": "Q5",
+      "type": "nmos",
+      "holes": [
+        "f24",
+        "g25",
+        "f26"
+      ]
+    },
+    {
+      "id": "Q6",
+      "type": "nmos",
+      "holes": [
+        "f28",
+        "g29",
+        "f30"
+      ]
+    },
+    {
+      "id": "LED_R",
+      "type": "led",
+      "holes": [
+        "a4",
+        "a5"
+      ],
+      "params": {
+        "color": "red"
+      }
+    },
+    {
+      "id": "R_LED_R",
+      "type": "resistor",
+      "holes": [
+        "b4",
+        "b6"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    },
+    {
+      "id": "LED_G",
+      "type": "led",
+      "holes": [
+        "a9",
+        "a10"
+      ],
+      "params": {
+        "color": "green"
+      }
+    },
+    {
+      "id": "R_LED_G",
+      "type": "resistor",
+      "holes": [
+        "b9",
+        "b11"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    },
+    {
+      "id": "LED_B",
+      "type": "led",
+      "holes": [
+        "a14",
+        "a15"
+      ],
+      "params": {
+        "color": "blue"
+      }
+    },
+    {
+      "id": "R_LED_B",
+      "type": "resistor",
+      "holes": [
+        "b14",
+        "b16"
+      ],
+      "params": {
+        "resistance": 330
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "W1",
+      "from": "PS:+",
+      "to": "top+1",
+      "color": "red"
+    },
+    {
+      "id": "W2",
+      "from": "PS:-",
+      "to": "bot-1",
+      "color": "black"
+    },
+    {
+      "id": "W3",
+      "from": "ESP:GND",
+      "to": "bot-2",
+      "color": "black"
+    },
+    {
+      "id": "W4",
+      "from": "ESP:GPIO25",
+      "to": "j4",
+      "color": "yellow"
+    },
+    {
+      "id": "W5",
+      "from": "j3",
+      "to": "bot-4",
+      "color": "black"
+    },
+    {
+      "id": "W6",
+      "from": "ESP:GPIO26",
+      "to": "j9",
+      "color": "yellow"
+    },
+    {
+      "id": "W7",
+      "from": "j8",
+      "to": "bot-5",
+      "color": "black"
+    },
+    {
+      "id": "W8",
+      "from": "ESP:GPIO14",
+      "to": "j14",
+      "color": "yellow"
+    },
+    {
+      "id": "W9",
+      "from": "j13",
+      "to": "bot-6",
+      "color": "black"
+    },
+    {
+      "id": "W10",
+      "from": "ESP:GPIO13",
+      "to": "j20",
+      "color": "yellow"
+    },
+    {
+      "id": "W11",
+      "from": "j19",
+      "to": "bot-7",
+      "color": "black"
+    },
+    {
+      "id": "W12",
+      "from": "ESP:GPIO12",
+      "to": "j25",
+      "color": "yellow"
+    },
+    {
+      "id": "W13",
+      "from": "j24",
+      "to": "bot-8",
+      "color": "black"
+    },
+    {
+      "id": "W14",
+      "from": "ESP:GPIO15",
+      "to": "j29",
+      "color": "yellow"
+    },
+    {
+      "id": "W15",
+      "from": "j28",
+      "to": "bot-9",
+      "color": "black"
+    },
+    {
+      "id": "W16",
+      "from": "top+4",
+      "to": "e6",
+      "color": "red"
+    },
+    {
+      "id": "W17",
+      "from": "e5",
+      "to": "j5",
+      "color": "blue"
+    },
+    {
+      "id": "W18",
+      "from": "top+5",
+      "to": "e11",
+      "color": "red"
+    },
+    {
+      "id": "W19",
+      "from": "e10",
+      "to": "j10",
+      "color": "blue"
+    },
+    {
+      "id": "W20",
+      "from": "top+6",
+      "to": "e16",
+      "color": "red"
+    },
+    {
+      "id": "W21",
+      "from": "e15",
+      "to": "j15",
+      "color": "blue"
+    }
+  ]
+}

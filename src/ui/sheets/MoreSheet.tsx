@@ -58,6 +58,7 @@ import firebeetleButton from '../../../examples/firebeetle-button.json'
 import firebeetleAdcPot from '../../../examples/firebeetle-adc-pot.json'
 import firebeetlePwmDimming from '../../../examples/firebeetle-pwm-dimming.json'
 import firebeetleMosfet from '../../../examples/firebeetle-mosfet.json'
+import sixMosfetRgb from '../../../examples/esp32-six-mosfet-rgb.json'
 import firebeetleDivider from '../../../examples/firebeetle-divider.json'
 import acDcSmoothing from '../../../examples/ac-dc-smoothing.json'
 import pkg from '../../../package.json'
@@ -132,6 +133,7 @@ const EXAMPLES: readonly ExampleEntry[] = [
   { title: 'ESP32 potentiometer / ADC', layout: firebeetleAdcPot as unknown as CircuitLayout },
   { title: 'ESP32 PWM LED dimming', layout: firebeetlePwmDimming as unknown as CircuitLayout },
   { title: 'ESP32 MOSFET LED switching', layout: firebeetleMosfet as unknown as CircuitLayout },
+  { title: 'ESP32 six MOSFETs + RGB (experimental)', layout: sixMosfetRgb as unknown as CircuitLayout },
   { title: 'ESP32 12V signal divider', layout: firebeetleDivider as unknown as CircuitLayout },
   { title: 'AC-to-DC rectifier + smoothing', layout: acDcSmoothing as unknown as CircuitLayout },
   { title: 'FireBeetle ESP32 LED blink', layout: firebeetleBlink as unknown as CircuitLayout },
@@ -148,9 +150,10 @@ export interface MoreSheetProps {
   open: boolean
   onDismiss: () => void
   desktop?: boolean
+  onOpenWorkspaces?: () => void
 }
 
-export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) {
+export function MoreSheet({ open, onDismiss, desktop = false, onOpenWorkspaces }: MoreSheetProps) {
   const simSpeed = useStore((s) => s.simSpeed)
   const setSimSpeed = useStore((s) => s.setSimSpeed)
   const resetSim = useStore((s) => s.resetSim)
@@ -254,7 +257,7 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
               <span className="lg-title">More</span>
             </div>
 
-            <McpStatus />
+            {window.location.hostname !== 'byd.whatsynaptic.com' && <McpStatus />}
             <ListGroup header="Simulation">
               <div className="lg-row asm-row-stack" role="listitem">
                 <span className="asm-row-stack-label">Speed</span>
@@ -349,6 +352,10 @@ export function MoreSheet({ open, onDismiss, desktop = false }: MoreSheetProps) 
                   {RENDER_MODES[renderMode].description}
                 </span>
               </div>
+            </ListGroup>
+
+            <ListGroup header="Projects">
+              <ListRow title="Workspaces" subtitle="Open, create, save and switch ASUS projects" chevron onPress={onOpenWorkspaces}/>
             </ListGroup>
 
             <ListGroup header="Circuit">
